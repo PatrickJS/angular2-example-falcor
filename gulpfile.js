@@ -96,4 +96,6 @@ gulp.task('watch', ['default'], function () {
 
 });
 
+gulp.task('start', ['watch', 'serve']);
+
 gulp.task('default', ['js', 'html', 'libs']);
