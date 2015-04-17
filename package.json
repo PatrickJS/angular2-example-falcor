@@ -1,18 +1,18 @@
 {
-  "name": "ng2-play",
+  "name": "angular2-example-falcor",
   "version": "0.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp play"
+    "start": "gulp serve"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pkozlowski-opensource/ng2-play.git"
+    "url": "https://github.com/gdi2290/angular2-example-falcor.git"
   },
   "bugs": {
-    "url": "https://github.com/pkozlowski-opensource/ng2-play/issues"
+    "url": "https://github.com/gdi2290/angular2-example-falcor/issues"
   },
-  "homepage": "https://github.com/pkozlowski-opensource/ng2-play",
+  "homepage": "https://github.com/gdi2290/angular2-example-falcor",
   "devDependencies": {
     "connect": "^3.3.4",
     "del": "~1.1.1",
@@ -20,6 +20,7 @@
     "gulp-plumber": "^1.0.0",
     "gulp-rename": "~1.2.0",
     "gulp-size": "^1.2.1",
+    "gulp-sourcemaps": "^1.5.1",
     "gulp-traceur": "0.17.*",
     "open": "0.0.5",
     "serve-static": "~1.8.1",
@@ -29,6 +30,10 @@
   "dependencies": {
     "angular2": "2.0.0-alpha.19",
     "es6-module-loader": "0.16.5",
-    "systemjs": "0.16.7"
+    "systemjs": "0.16.7",
+    "ng2": "git+ssh://github.com/gdi2290/ng2dist.git#master",
+    "falcor": "git+ssh://git@github.com/Netflix/falcor.git#master",
+    "falcor-server": "git+ssh://git@github.com/Netflix/falcor-server.git#v0.0.3",
+    "falcor-browser": "git+ssh://git@github.com/Netflix/falcor-browser.git#v0.0.4"
   }
 }

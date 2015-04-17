@@ -1,14 +1,14 @@
-ng2-play
+angular2-example-falcor
 ========
 
-The goal of this repo is to prepare a minimal ("walking skeleton") project build with Angular2.0 and ES6
+
 
 ## Install
 
 Clone this repo and execute in your favourite shell:
 
-* `npm i -g gulp` to install gulp globally (if you don't have it installed already)
-* `npm i` to install local npm dependencies
+* `npm install -g gulp` to install gulp globally (if you don't have it installed already)
+* `npm install` to install local npm dependencies
 
 ## Play
 
@@ -36,4 +36,4 @@ After completing installation type in your favourite shell:
 
 * [Practical Workflows for ES6 Modules, Fluent 2014](https://www.youtube.com/watch?v=0VUjM-jJf2U)
 * [Guy Bedford: Package Management for ES6 Modules, JSConf2014](https://www.youtube.com/watch?v=szJjsduHBQQ)
-* [Loader API specification](http://whatwg.github.io/loader/) 
+* [Loader API specification](http://whatwg.github.io/loader/)

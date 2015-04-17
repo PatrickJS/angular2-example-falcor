@@ -1,30 +1,88 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="http://cdn3.nflxext.com/FilePackageGetter/sharedSystem/pkg-nflxrsrc-700000040100000000022d4d61a8a0184c304aa908444348260083010422009ee0030-1428695690-15-15.css?v=15&r=us-west-2">
+<!-- ES6-related imports -->
+<script src="lib/traceur-runtime.js"></script>
+<script src="lib/es6-module-loader-sans-promises.src.js"></script>
+<script src="lib/extension-register.js"></script>
+<script>register(System);</script>
 
-    <!-- ES6-related imports -->
-    <script src="lib/traceur-runtime.js"></script>
-    <script src="lib/es6-module-loader-sans-promises.src.js"></script>
-    <script src="lib/extension-register.js"></script>
-    <script>
-        register(System);
-    </script>
+<!-- Angular2-related imports -->
+<script src="lib/zone.js"></script>
+<script src="lib/long-stack-trace-zone.js"></script>
 
-    <!-- Angular2-related imports -->
-    <script src="lib/zone.js"></script>
-    <script src="lib/long-stack-trace-zone.js"></script>
-    <script src="lib/angular2.js"></script>
+<script src="lib/falcor.js"></script>
+
+<script src="lib/angular2.js"></script>
+<style type="text/css">
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  h1, h2, h3 {
+    margin: 0;
+  }
+  .scroll-row {
+    width: auto;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    position: relative;
+  }
+  main {
+    padding: 1em;
+    padding-top: 8em;
+  }
+  .genre-name, .movie-name {
+    padding: 1em;
+    padding-left: 0;
+  }
+  .movie {
+    display: inline-block;
+  }
+  .movie-box-image {
+    height: 233px;
+  }
+  .logo {
+    color: #e50914;
+    cursor: pointer;
+  }
+  body {
+    min-width: 200px;
+  }
+  .side-details{
+    float: left;
+    width: 14em;
+  }
+  movie-details .movie-copy {
+    padding: 1em;
+
+  }
+  movie-details h3.movie-name {
+    padding-bottom: 0;
+  }
+</style>
 </head>
 <body>
-    <hello>
-        Loading...
-    </hello>
+
+  <app>
+    Loading...
+  </app>
+
+
 </body>
 
 <!-- Application bootstrap logic -->
 <script>
-    System.import('hello').catch(console.log.bind(console));
+  System.import('app')//.catch(console.log.bind(console));
 </script>
 
 </html>
