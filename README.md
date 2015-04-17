@@ -5,16 +5,16 @@ angular2-example-falcor
 
 ## Install
 
-Clone this repo and execute in your favourite shell:
+Clone this repo and execute in your terminal:
 
 * `npm install -g gulp` to install gulp globally (if you don't have it installed already)
 * `npm install` to install local npm dependencies
 
-## Play
+## Start
 
-After completing installation type in your favourite shell:
+After completing installation type in your terminal:
 
-* `gulp play` (or `npm start`) to start a "Hello World" app in a new browser window. App files are observed and will be re-transpiled on each change.
+* `gulp start` (or `npm start`)
 
 ## Dependencies
 
