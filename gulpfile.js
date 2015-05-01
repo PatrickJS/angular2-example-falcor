@@ -29,10 +29,14 @@ var port = 9000;
 
 var buildConfig = {
   paths: {
-    "angular2/*": "node_modules/ng2dist/js/prod/es6/angular2/*.es6",
-    // "angular2/*": "node_modules/angular2/es6/prod/*.es6",
+    // "angular2/*": "node_modules/ng2dist/js/prod/es6/angular2/*.es6",
+    "angular2/*": "node_modules/angular2/es6/prod/*.es6",
     "falcor": "node_modules/falcor/dist/Falcor.js",
-    "rx/*": "node_modules/angular2/node_modules/rx/*.js"
+    "falcor-browser": "node_modules/falcor-browser/src/XMLHttpSource.js",
+    "angular2/router": "node_modules/angular2/es6/prod/router.es6",
+    "rx/*": "node_modules/angular2/node_modules/rx/*.js",
+    "rx": "node_modules/angular2/node_modules/rx/dist/rx.all.js",
+    "falcor-observable": "node_modules/angular2/node_modules/rx/dist/rx.all.js"
   }
 };
 
@@ -72,19 +76,27 @@ gulp.task('angular2', function () {
   return builder.build('angular2/angular2', 'dist/lib/angular2.js', {});
 });
 
+gulp.task('router', function () {
+  var builder = new Builder(buildConfig);
+  return builder.build('angular2/router', 'dist/lib/router.js', {});
+});
 
-gulp.task('libs', ['angular2', 'falcor'], function () {
+
+gulp.task('libs', ['angular2', 'router', 'falcor'], function () {
   var size = require('gulp-size');
   return gulp.src(PATHS.lib)
     .pipe(size({showFiles: true, gzip: true}))
     .pipe(gulp.dest('dist/lib'));
 });
 
-gulp.task('serve', ['default'], function() {
+gulp.task('serve', function() {
 
-  var app = connect().use(serveStatic(__dirname + '/dist'));  // serve everything that is static
+  var app = connect();
+  app.use(serveStatic(__dirname + '/dist'));
+  app.use(serveStatic(__dirname + '/public'));
   http.createServer(app).listen(port, function () {
     // open('http://localhost:' + port);
+    console.log('\nServer started on port', port, '\n');
   });
 });
 
