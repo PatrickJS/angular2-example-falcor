@@ -28,12 +28,12 @@
     "through2": "~0.6.3"
   },
   "dependencies": {
-    "angular2": "2.0.0-alpha.19",
+    "angular2": "2.0.0-alpha.21",
     "es6-module-loader": "0.16.5",
     "systemjs": "0.16.7",
     "ng2": "git+ssh://github.com/gdi2290/ng2dist.git#master",
-    "falcor": "git+ssh://git@github.com/Netflix/falcor.git#master",
-    "falcor-server": "git+ssh://git@github.com/Netflix/falcor-server.git#v0.0.3",
-    "falcor-browser": "git+ssh://git@github.com/Netflix/falcor-browser.git#v0.0.4"
+    "falcor": "git+ssh://git@github.com/Netflix/falcor.git",
+    "falcor-server": "git+ssh://git@github.com/Netflix/falcor-server.git",
+    "falcor-browser": "git+ssh://git@github.com/Netflix/falcor-browser.git"
   }
 }
