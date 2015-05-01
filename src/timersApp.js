@@ -1,16 +1,20 @@
 import {bootstrap, Component, Decorator, View, NgElement} from 'angular2/angular2';
 import {For} from 'angular2/directives';
 
-import {LifeCycle} from 'angular2/src/core/life_cycle/life_cycle';
 import {bind} from 'angular2/di';
 import Rx from 'rx/dist/rx.all';
+import {PipeRegistry} from 'angular2/change_detection';
 
+import {pipes} from './app/pipes/pipes';
 
 @Component({
   selector: 'timers-app'
 })
 @View({
-  template: `<timers-cmp [timers]="timers">`, //Observable<List<Observable>>
+  //Observable<List<Observable>>
+  template: `
+  <timers-cmp [timers]="timers | async">
+  `,
   directives: [
     TimersCmp
   ]
@@ -18,7 +22,7 @@ import Rx from 'rx/dist/rx.all';
 class TimersApp {
   timers:any;
 
-  constructor(lc:LifeCycle) {
+  constructor() {
     var x = [
       Rx.Observable.timer(100, 1000).timeInterval().map((v) => v.value),
       Rx.Observable.timer(100, 2000).timeInterval().map((v) => v.value),
@@ -30,8 +34,8 @@ class TimersApp {
 
 
 /**
- * Note that I am using the rx pipe in the binding position.
- * I could have changed it and instead "dereference" it in the bind as follows `timers: 'timers | rx'`
+ * Note that I am using the async pipe in the binding position.
+ * I could have changed it and instead "dereference" it in the bind as follows `timers: 'timers | async'`
  */
 @Component({
   selector: 'timers-cmp',
@@ -41,7 +45,7 @@ class TimersApp {
 })
 @View({
   template: `
-    <timer-cmp *for="var t of (timers | async)" [timer]="t"></timer-cmp>
+    <timer-cmp *for="#t of timers" [timers]="t | async"></timer-cmp>
   `,
   directives: [
     TimerCmp,
@@ -50,24 +54,32 @@ class TimersApp {
 })
 class TimersCmp {
   timers:any; //Observable<List<Observable>>
+  constructor() {
+  }
+  set timers(val) {
+    debugger;
+    return val;
+  }
 }
 
 /**
- * Note that I am using the rx pipe in the bind config.
- * I could have changed it and instead "dereference" it in the binding as follows {{timer | rx}}
+ * Note that I am using the async pipe in the bind config.
+ * I could have changed it and instead "dereference" it in the binding as follows {{ timer | async }}
  */
 @Component({
   selector: 'timer-cmp',
   properties: {
-    timer: 'timer | async'
+    timers: 'timers'
   }
 })
 @View({
-  template: `<div>Time {{timer}}</div>`,
+  template: `<div>Time {{ timer }}</div>`,
   directives: []
 })
 class TimerCmp {
   timer:number;
 }
 
-bootstrap(TimersApp);
+bootstrap(TimersApp, [
+  bind(PipeRegistry).toValue(new PipeRegistry(pipes))
+]);
