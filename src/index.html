@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="http://cdn3.nflxext.com/FilePackageGetter/sharedSystem/pkg-nflxrsrc-700000040100000000022d4d61a8a0184c304aa908444348260083010422009ee0030-1428695690-15-15.css?v=15&r=us-west-2">
+  <link rel="stylesheet" type="text/css" href="netflix.css">
 <!-- ES6-related imports -->
 <script src="lib/traceur-runtime.js"></script>
 <script src="lib/es6-module-loader-sans-promises.src.js"></script>
@@ -16,6 +16,7 @@
 <script src="lib/falcor.js"></script>
 
 <script src="lib/angular2.js"></script>
+<script src="lib/router.js"></script>
 <style type="text/css">
   html, body {
     margin: 0;
@@ -69,24 +70,27 @@
   movie-details h3.movie-name {
     padding-bottom: 0;
   }
+  .inline-block {
+    display: inline-block;
+  }
 </style>
 </head>
 <body>
 
-  <app>
-    Loading...
-  </app>
 
 <!--
   <timers-app>
     Loading...
   </timers-app>
  -->
+  <app>
+    Loading...
+  </app>
 </body>
 
 <!-- Application bootstrap logic -->
 <script>
-  System.import('app').catch(console.log.bind(console));
+  System.import('app/app');
   // System.import('timersApp').catch(console.log.bind(console));
 </script>
 
