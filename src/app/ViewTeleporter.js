@@ -5,7 +5,7 @@ var state = {
   url: false,
   model: null
 }
-export class Router {
+export class ViewTeleporter {
   constructor() {
     this.url = state.url;
     this.params = state.params;
