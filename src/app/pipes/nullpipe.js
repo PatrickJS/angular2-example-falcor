@@ -1,6 +1,6 @@
 import {isBlank} from 'angular2/src/facade/lang';
-import {Pipe} from 'angular2/change_detection'; // WrappedValue
-import {WrappedValue} from 'app/pipes/wrappedvalue';
+import {Pipe, NO_CHANGE} from 'angular2/change_detection'; // WrappedValue
+// import {WrappedValue} from 'app/pipes/wrappedvalue';
 /**
  * @exportedAs angular2/pipes
  */
@@ -35,9 +35,9 @@ export class NullPipe extends Pipe {
   transform(value) {
     if (! this.called) {
       this.called = true;
-      return WrappedValue.wrap(null);
+      return null
     } else {
-      return null;
+      return NO_CHANGE;
     }
   }
 }

@@ -70,10 +70,10 @@ export class AsyncPipe extends Pipe {
     }
 
     if (this._latestValue === this._latestReturnedValue) {
-      return this._latestReturnedValue;
+      return NO_CHANGE;
     } else {
       this._latestReturnedValue = this._latestValue;
-      return WrappedValue.wrap(this._latestValue);
+      return this._latestValue
     }
   }
 
