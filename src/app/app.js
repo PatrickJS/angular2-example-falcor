@@ -6,6 +6,7 @@ import {Pipeline} from 'angular2/src/router/pipeline';
 import {Router} from 'angular2/router';
 import {bind} from 'angular2/di';
 import {PipeRegistry} from 'angular2/change_detection';
+import {ControlGroup, Control, FormBuilder, Validators, FormDirectives} from 'angular2/forms';
 
 import falcor from 'falcor';
 
@@ -20,33 +21,35 @@ import {pipes} from 'app/pipes/pipes';
 })
 @View({
   template: `
-  <button (click)="back()">Back</button>
-  <h3 class="movie-name">{{ model.getValue('name') | async }}</h3>
-  <hr>
-  <div class="side-details">
-    <img [src]="model.getValue('img') | async">
-    <b>Rating</b>: {{ rate((model.getValue('rating') | async)) }}
-  </div>
-  <div class="movie-copy">
-    <p>
-      {{ model.getValue('copy') | async }}
-    </p>
-    <ul>
-      <li>
-        <b>Starring</b>: {{ model.getValue('starring') | async }}
-      </li>
-      <li>
-        <b>Genres</b>: {{ model.getValue('genres') | async }}
-      </li>
-    <ul>
-  </div>
+
+  <form [control-group]='searchForm'>
+
+    Search:
+    <input type="text" control="searchInput" autofocus>
+
+    {{ searchForm.controls.searchInput.value }}
+
+  </form>
+
+
   `,
-  directives: [ If, MovieDetails ]
+  directives: [ If, For, MovieDetails, FormDirectives ]
 })
 class MovieDetails {
   constructor(router: ViewTeleporter) {
     this.router = router;
+
+    this.searchForm = new ControlGroup({
+      searchInput: new Control('')
+    });
+
+    var testing = function *() {
+      console.log('wat');
+    }
+
   }
+
+
   back() {
     this.router.back();
   }
@@ -151,7 +154,7 @@ class App {
 
 
     this.router = router;
-    this.details = false;
+    this.details = true;
 
     // default model
     var detailsModel = model.bind('genres[0].titles[0]', 'name');
