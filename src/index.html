@@ -13,9 +13,12 @@
 <script src="lib/zone.js"></script>
 <script src="lib/long-stack-trace-zone.js"></script>
 
-<script src="lib/falcor.js"></script>
 
 <script src="lib/angular2.js"></script>
+
+<script src="lib/falcor.js"></script>
+<script src="lib/falcor-browser.js"></script>
+
 <script src="lib/router.js"></script>
 <style type="text/css">
   html, body {
@@ -37,6 +40,7 @@
     overflow-y: hidden;
     white-space: nowrap;
     position: relative;
+    height: 250px;
   }
   main {
     padding: 1em;
@@ -73,6 +77,10 @@
   .inline-block {
     display: inline-block;
   }
+  .disable-hover,
+  .disable-hover * {
+    pointer-events: none !important;
+}
 </style>
 </head>
 <body>

@@ -71,6 +71,11 @@ gulp.task('falcor', function () {
   return builder.build('falcor', 'dist/lib/falcor.js', {});
 });
 
+gulp.task('falcor-browser', function () {
+  var builder = new Builder(buildConfig);
+  return builder.build('falcor-browser', 'dist/lib/falcor-browser.js', {});
+});
+
 gulp.task('angular2', function () {
   var builder = new Builder(buildConfig);
   return builder.build('angular2/angular2', 'dist/lib/angular2.js', {});
@@ -82,7 +87,7 @@ gulp.task('router', function () {
 });
 
 
-gulp.task('libs', ['angular2', 'router', 'falcor'], function () {
+gulp.task('libs', ['angular2', 'router', 'falcor', 'falcor-browser'], function () {
   var size = require('gulp-size');
   return gulp.src(PATHS.lib)
     .pipe(size({showFiles: true, gzip: true}))
