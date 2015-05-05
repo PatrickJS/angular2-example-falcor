@@ -5,7 +5,7 @@ import {bind} from 'angular2/di';
 import Rx from 'rx/dist/rx.all';
 import {PipeRegistry} from 'angular2/change_detection';
 
-import {pipes} from './app/pipes/pipes';
+import {pipeInjectables} from 'pipes/pipes';
 
 @Component({
   selector: 'timers-app'

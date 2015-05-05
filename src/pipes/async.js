@@ -107,7 +107,7 @@ export class AsyncPipe extends Pipe {
 
   _updateLatestValue(value):void {
     this._latestValue = value;
-    // this._ref.requestCheck();
+    this._ref.requestCheck();
   }
 }
 

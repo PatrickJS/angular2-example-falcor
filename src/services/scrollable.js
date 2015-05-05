@@ -10,8 +10,8 @@ export class Scrollable {
     this.el = (this.scrollType === 'y') ? window.document : el;
     this.timer = null;
 
-    this.listener = this.onScroll.bind(this);
     this.zone.runOutsideAngular(() => {
+      this.listener = this.onScroll.bind(this);
       this.el.addEventListener('scroll', this.listener, false);
     });
     this.ticking = false;
@@ -95,6 +95,7 @@ export class Scroller {
     this.ticking = false;
 
     var scrollable = new Scrollable(pageSize, scrollType, el.domElement, zone);
+
 
     scrollable.onUpdate(() => {
       zone.run(() => {

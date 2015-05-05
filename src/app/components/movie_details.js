@@ -9,6 +9,7 @@ import {ViewTeleporter} from 'app/ViewTeleporter';
   injectables: [ ViewTeleporter ]
 })
 @View({
+  directives: [ If ],
   template: `
   <button (click)="back()">Back</button>
   <h3 class="movie-name">{{ model.getValue('name') | async }}</h3>
@@ -30,8 +31,7 @@ import {ViewTeleporter} from 'app/ViewTeleporter';
       </li>
     <ul>
   </div>
-  `,
-  directives: [ If ]
+  `
 })
 export class MovieDetails {
   constructor(router: ViewTeleporter) {

@@ -10,14 +10,14 @@ import {ViewTeleporter} from 'app/ViewTeleporter';
   injectables: [ ViewTeleporter ]
 })
 @View({
+  directives: [ If ],
   template: `
   <div class="movie" >
     <a (^click)="details(model)" [href]="'#/'+ (model.getValue('name') | async)" >
       <img [src]="model.getValue('img') | async" class="boxShotImg movie-box-image">
     </a>
   </div>
-  `,
-  directives: [ If ]
+  `
 })
 export class Movie {
   constructor(router: ViewTeleporter) {

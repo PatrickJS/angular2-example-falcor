@@ -7,7 +7,7 @@ import XMLHttpSource from 'falcor-browser';
 import {ViewTeleporter} from 'app/ViewTeleporter';
 import {state} from 'app/state';
 
-import {Scrollable, Scroller} from 'app/services/scrollable';
+import {Scrollable, Scroller} from 'services/scrollable';
 
 import {MovieDetails} from 'app/components/movie_details';
 import {GenreList} from 'app/components/genre_list';
@@ -19,6 +19,7 @@ import {GenreList} from 'app/components/genre_list';
   injectables: [ ViewTeleporter ]
 })
 @View({
+  directives: [ If, For, GenreList, MovieDetails, Scroller ],
   template: `
   <navbar id="hd">
     <h1 class="logo" (click)="home()">Angular 2 + FalcorJS</h1>
@@ -33,10 +34,7 @@ import {GenreList} from 'app/components/genre_list';
       <genre-list *for="var genre of state.genresList" [model]="genre | async" page-size="12"></genre-list>
     </div>
   </main>
-
-
   `,
-  directives: [ If, For, GenreList, MovieDetails, Scroller ]
 })
 export class App {
 
@@ -84,7 +82,7 @@ export class App {
 
 
     this.router = router;
-    this.details = true;
+    this.details = false;
 
     // default model
     var detailsModel = model.bind('genres[0].titles[0]', 'name');

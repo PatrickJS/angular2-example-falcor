@@ -2,7 +2,7 @@ import {Component, View, Attribute, NgElement, onDestory} from 'angular2/angular
 import {VmTurnZone} from 'angular2/src/core/zone/vm_turn_zone';
 import {If, For} from 'angular2/directives';
 
-import {Scrollable, Scroller} from 'app/services/scrollable';
+import {Scrollable, Scroller} from 'services/scrollable';
 
 import {Movie} from 'app/components/movie';
 
@@ -11,19 +11,15 @@ import {Movie} from 'app/components/movie';
   properties: { model: 'model' }
 })
 @View({
+  directives: [ Movie , Scroller, For, If ],
   template: `
   <h2 class="genre-name">
     {{ model.getValue('name') | async }}
   </h2>
-  <!--
-  -->
   <div class="scroll-row" *if="state.movieList.length" page-size="12" scroll="x" [scroller]="state">
     <movie *for="var movie of state.movieList" [model]="movie | async"></movie>
   <div>
-  <!--
-  -->
-  `,
-  directives: [ Movie , Scroller, For, If ]
+  `
 })
 export class GenreList {
   constructor(
