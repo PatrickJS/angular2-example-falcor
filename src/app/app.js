@@ -1,17 +1,17 @@
-import {Component, View, Decorator, ViewPort, onChange} from 'angular2/angular2';
+import {Component, View, Decorator, Attribute, onChange, onDestory} from 'angular2/angular2';
 import {If, For, Switch, SwitchWhen, SwitchDefault} from 'angular2/directives';
 import {bootstrap, NgElement} from 'angular2/angular2';
-import {RootRouter} from 'angular2/src/router/router';
-import {Pipeline} from 'angular2/src/router/pipeline';
-import {Router} from 'angular2/router';
+import {VmTurnZone} from 'angular2/src/core/zone/vm_turn_zone';
+
 import {bind} from 'angular2/di';
-import {PipeRegistry} from 'angular2/change_detection';
 
 import falcor from 'falcor';
+import XMLHttpSource from 'falcor-browser';
+
+import {pipeInjectables} from 'app/pipes/pipes';
 
 import {ViewTeleporter} from 'app/ViewTeleporter';
 import {state} from 'app/state';
-import {pipes} from 'app/pipes/pipes';
 
 
 @Component({
@@ -69,13 +69,13 @@ class MovieDetails {
 })
 @View({
   template: `
-  <div class="movie">
+  <div class="movie" >
     <a (^click)="details(model)" [href]="'#/'+ (model.getValue('name') | async)" >
       <img [src]="model.getValue('img') | async" class="boxShotImg movie-box-image">
     </a>
   </div>
   `,
-  directives: []
+  directives: [ If ]
 })
 class Movie {
   constructor(router: ViewTeleporter) {
@@ -87,31 +87,191 @@ class Movie {
 }
 
 
+class Scrollable {
+  pageSize: number;
+  constructor(pageSize, scrollType, el, zone) {
+    this.pageSize = pageSize;
+    this.scrollType = scrollType;
+    this.zone = zone;
+    this.el = (this.scrollType === 'y') ? window.document : el;
+    this.timer = null;
+
+    this.listener = this.onScroll.bind(this);
+    this.zone.runOutsideAngular(() => {
+      this.el.addEventListener('scroll', this.listener, false);
+    });
+    this.ticking = false;
+    this.body = document.body;
+    this.innerHeight =  window.innerHeight;
+    this.innerWidth =  window.innerWidth;
+  }
+  onUpdate(callback) {
+    this.handler = callback;
+  }
+  onDestroy() {
+    this.zone.runOutsideAngular(() => {
+      this.el.removeEventListener('scroll', this.listener, false);
+      this.listener = null;
+    })
+    this.body = null;
+    this.innerHeight = null;
+    this.lastScrollY = null;
+    this.lastScrollX = null;
+    this.offsetHeight = null;
+    this.offsetWidth = null;
+    this.el = null;
+    this.timer = null;
+  }
+  onScroll() {
+    this.lastScrollY = window.scrollY;
+    this.lastScrollX = this.el.scrollLeft;
+    this.offsetHeight = this.body.offsetHeight;
+
+    if (this.scrollType === 'y') {
+      if (this.isBottom()) {
+        this.requestTick();
+      }
+    } else if (this.scrollType === 'x') {
+      if (this.isRight()) {
+        this.requestTick();
+      }
+    }
+  }
+  requestTick() {
+    if (!this.ticking) {
+      this.ticking = true;
+      requestAnimationFrame(this.update.bind(this));
+    }
+  }
+  update(pageSize) {
+    this.handler(pageSize);
+    this.ticking = false;
+  }
+  isBottom() {
+    this.lastCal = this.innerHeight + this.lastScrollY;
+    var isbottom = (this.lastCal >= this.offsetHeight * 0.7);
+    // console.log(window.scrollY, 'isbottom', isbottom, this.lastScrollY, this.innerHeight, this.offsetHeight, 'this.lastCal', this.lastCal);
+    return isbottom;
+  }
+  isRight() {
+    this.lastCal = this.el.offsetWidth + this.lastScrollX;
+    var isright = (this.lastCal >= this.el.scrollWidth * 0.7);
+    // console.log(this.el.offsetWidth, 'isright', isright, '\n', this.lastCal, this.el.offsetWidth);
+    return isright;
+  }
+}
+
+
+@Decorator({
+  selector: '[scroller]',
+  lifecycle: ['onDestroy'],
+  properties: {
+    'scroller' : 'scroller'
+  }
+})
+class Scroller {
+  pageSize: number;
+  constructor(
+    @Attribute('scroll') scrollType,
+    @Attribute('page-size') pageSize,
+    zone: VmTurnZone, el: NgElement) {
+
+    this.ticking = false;
+
+    var scrollable = new Scrollable(pageSize, scrollType, el.domElement, zone);
+
+    scrollable.onUpdate(() => {
+      zone.run(() => {
+        this.scroller.addMore(pageSize);
+      });
+    });
+
+  }
+  onDestroy() {
+    // this.scrollable.onDestroy();
+    // this.scrollable = null;
+  }
+}
+
+
 @Component({
   selector: 'genres-list',
-  properties: {
-    model: 'model'
-  }
+  properties: { model: 'model' }
 })
 @View({
   template: `
   <h2 class="genre-name">
     {{ model.getValue('name') | async }}
   </h2>
-  <div class="scroll-row">
-    <movie [model]="model.bind('titles[0]', 'name') | async"></movie>
-    <movie [model]="model.bind('titles[1]', 'name') | async"></movie>
-    <movie [model]="model.bind('titles[2]', 'name') | async"></movie>
-    <movie [model]="model.bind('titles[3]', 'name') | async"></movie>
-    <movie [model]="model.bind('titles[4]', 'name') | async"></movie>
-    <movie [model]="model.bind('titles[5]', 'name') | async"></movie>
-    <movie [model]="model.bind('titles[6]', 'name') | async"></movie>
-    <movie [model]="model.bind('titles[7]', 'name') | async"></movie>
+  <!--
+  -->
+  <div class="scroll-row" *if="state.movieList.length" page-size="12" scroll="x" [scroller]="state">
+    <movie *for="var movie of state.movieList" [model]="movie | async"></movie>
   <div>
+  <!--
+  -->
   `,
-  directives: [ Movie ]
+  directives: [ Movie , Scroller, For, If ]
 })
-class GenreList {}
+class GenreList {
+  constructor(
+    @Attribute('scroll') scrollType,
+    @Attribute('page-size') pageSize,
+    zone: VmTurnZone, el: NgElement) {
+
+    this._model = null;
+    this.initModel = null;
+    this.pageSize = pageSize;
+    var self = this;
+
+    var movie = {
+      movieList: [
+      ],
+      lastItem: 0,
+      addMore: function(pageSize) {
+        var len = movie.movieList.length;
+        var index = movie.lastItem;
+        if (movie.lastItem === (pageSize || self.pageSize)-1) {
+          movie.lastItem = 0;
+        } else {
+          movie.lastItem++;
+        }
+
+        if (self.model) {
+          movie.movieList.push(
+            self.model.bind(['titles', index], 'name')
+          );
+        }
+      }
+    };
+
+    this.state = movie;
+  }
+  set model(val) {
+    if (!this._model && val) {
+      this._model = val;
+      this.init(this._model);
+    }
+    return this._model;
+  }
+  get model() {
+    return this._model;
+  }
+  init(val) {
+    if (this.initModel && this.model) return;
+    this.initModel = true;
+    this.state.defaultTitles = [];
+    for (var i = 0; i < this.pageSize; i++) {
+      this.state.defaultTitles.push(
+        this.model.bind(['titles', i], 'name')
+      );
+    }
+    this.state.movieList = [].concat(this.state.movieList, this.state.defaultTitles);
+    // for (var i = 0; i < 8; i++) {
+    //   this.state.addMore(8)
+    // };
+  }
+}
 
 @Component({
   selector: 'app',
@@ -128,26 +288,58 @@ class GenreList {}
       <movie-details [model]="detailModel"></movie-details>
     </div>
 
-
-    <div *if="!details">
-      <genres-list [model]="model.bind('genres[0]', 'name') | async"></genres-list>
-      <genres-list [model]="model.bind('genres[1]', 'name') | async"></genres-list>
-      <genres-list [model]="model.bind('genres[2]', 'name') | async"></genres-list>
-      <genres-list [model]="model.bind('genres[3]', 'name') | async"></genres-list>
+    <div *if="!details" page-size="4" scroll="y" [scroller]="state">
+      <genres-list *for="var genre of state.genresList" [model]="genre | async" page-size="12"></genres-list>
     </div>
   </main>
 
 
   `,
-  directives: [ If, GenreList, MovieDetails ]
+  directives: [ If, For, GenreList, MovieDetails, Scroller ]
 })
 class App {
+
   constructor(router: ViewTeleporter) {
     // FalcorModel
     var model = new falcor.Model({
       cache: state
     });
     this.model = model;
+
+    var self = this;
+
+    var genre = {
+      genresList: [
+      ],
+      defaultTitles: [
+        model.bind(['genres', 0], 'name'),
+        model.bind(['genres', 1], 'name'),
+        model.bind(['genres', 2], 'name'),
+        model.bind(['genres', 3], 'name')
+      ],
+      lastItem: 0,
+      addMore: function(pageSize) {
+        var len = genre.genresList.length;
+        var index = genre.lastItem;
+        if (self.model && self.model.bind) {
+          if (genre.lastItem === pageSize-1) {
+            genre.lastItem = 0;
+          } else {
+            genre.lastItem++;
+          }
+
+          genre.genresList.push(
+            self.model.bind(['genres', index], 'name')
+          );
+        }
+      }
+    };
+    genre.addMore(4)
+    genre.addMore(4)
+    genre.addMore(4)
+    genre.addMore(4)
+    this.state = genre;
+    // document.
 
 
     this.router = router;
@@ -181,5 +373,5 @@ class App {
 
 bootstrap(App, [
   // bind(Router).toValue(new RootRouter(new Pipeline())),
-  bind(PipeRegistry).toValue(new PipeRegistry(pipes))
+  pipeInjectables
 ]);
