@@ -14,42 +14,39 @@ import {pipeInjectables} from 'app/pipes/pipes';
 import {ViewTeleporter} from 'app/ViewTeleporter';
 import {state} from 'app/state';
 
-
 @Component({
   selector: 'movie-details',
   properties: { model: 'model' }
 })
 @View({
   template: `
-
-  <form [control-group]='searchForm'>
-
-    Search:
-    <input type="text" control="searchInput" autofocus>
-
-    {{ searchForm.controls.searchInput.value }}
-
-  </form>
-
-
+  <button (click)="back()">Back</button>
+  <h3 class="movie-name">{{ model.getValue('name') | async }}</h3>
+  <hr>
+  <div class="side-details">
+    <img [src]="model.getValue('img') | async">
+    <b>Rating</b>: {{ rate((model.getValue('rating') | async)) }}
+  </div>
+  <div class="movie-copy">
+    <p>
+      {{ model.getValue('copy') | async }}
+    </p>
+    <ul>
+      <li>
+        <b>Starring</b>: {{ model.getValue('starring') | async }}
+      </li>
+      <li>
+        <b>Genres</b>: {{ model.getValue('genres') | async }}
+      </li>
+    <ul>
+  </div>
   `,
-  directives: [ If, For, MovieDetails, FormDirectives ]
+  directives: [ If, MovieDetails ]
 })
 class MovieDetails {
   constructor(router: ViewTeleporter) {
     this.router = router;
-
-    this.searchForm = new ControlGroup({
-      searchInput: new Control('')
-    });
-
-    var testing = function *() {
-      console.log('wat');
-    }
-
   }
-
-
   back() {
     this.router.back();
   }
