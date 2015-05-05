@@ -1,10 +1,10 @@
 import {Component, View, Decorator, Attribute, onChange, onDestory} from 'angular2/angular2';
-import {If, For, Switch, SwitchWhen, SwitchDefault} from 'angular2/directives';
-import {bootstrap, NgElement} from 'angular2/angular2';
-import {VmTurnZone} from 'angular2/src/core/zone/vm_turn_zone';
 import {ControlGroup, Control, FormBuilder, Validators, FormDirectives} from 'angular2/forms';
-
+import {If, For, Switch, SwitchWhen, SwitchDefault} from 'angular2/directives';
+import {VmTurnZone} from 'angular2/src/core/zone/vm_turn_zone';
+import {bootstrap, NgElement} from 'angular2/angular2';
 import {bind} from 'angular2/di';
+
 
 import falcor from 'falcor';
 import XMLHttpSource from 'falcor-browser';
