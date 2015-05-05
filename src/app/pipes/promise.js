@@ -3,7 +3,7 @@ import {isBlank, isPresent} from 'angular2/src/facade/lang';
 import {Pipe, ChangeDetectorRef, NO_CHANGE} from 'angular2/change_detection'; // WrappedValue
 import Rx from 'rx/dist/rx.all';
 
-import {WrappedValue} from 'app/pipes/wrappedvalue';
+// import {WrappedValue} from 'app/pipes/wrappedvalue';
 
 export class PromisePipe extends Pipe {
   _ref:ChangeDetectorRef;

@@ -1,3 +1,5 @@
+import {bind} from 'angular2/di';
+import {PipeRegistry} from 'angular2/change_detection';
 
 import {defaultPipes} from 'angular2/change_detection';
 
@@ -17,3 +19,7 @@ export var pipes = Object.assign({}, defaultPipes, {
     new NullPipeFactory()
   ]
 });
+
+export var pipeInjectables = [
+  bind(PipeRegistry).toValue(new PipeRegistry(pipes))
+];
