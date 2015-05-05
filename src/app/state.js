@@ -14,11 +14,19 @@ export var state = {
           $ref('titlesById[80]'),
           $ref('titlesById[77]'),
           $ref('titlesById[9]'),
+          $ref('titlesById[99]'),
+          $ref('titlesById[80]'),
+          $ref('titlesById[77]'),
+          $ref('titlesById[9]'),
         ],
         name: 'Thrillers'
       },
       {
         titles: [
+          $ref('titlesById[60]'),
+          $ref('titlesById[65]'),
+          $ref('titlesById[51]'),
+          $ref('titlesById[62]'),
           $ref('titlesById[60]'),
           $ref('titlesById[65]'),
           $ref('titlesById[51]'),
@@ -40,6 +48,10 @@ export var state = {
           $ref('titlesById[7]'),
           $ref('titlesById[33]'),
           $ref('titlesById[89]'),
+          $ref('titlesById[99]'),
+          $ref('titlesById[7]'),
+          $ref('titlesById[33]'),
+          $ref('titlesById[89]'),
         ],
         name: 'Netflix Originals'
       },
@@ -53,6 +65,11 @@ export var state = {
           $ref('titlesById[9]'),
           $ref('titlesById[7]'),
           $ref('titlesById[99]'),
+          $ref('titlesById[42]'),
+          $ref('titlesById[9]'),
+          $ref('titlesById[7]'),
+          $ref('titlesById[99]'),
+
         ],
         name: 'Dramas'
       },
@@ -122,7 +139,11 @@ export var state = {
       '42': {
         name: 'Cosmos',
         rating: 5,
-        img: 'http://cdn2.nflximg.net/webp/2642/9972642.webp'
+        seasons: 5,
+        img: 'http://cdn2.nflximg.net/webp/2642/9972642.webp',
+        copy: 'A high school chemistry teacher dying of cancer teams with a former student to secure his family\'s future by manufacturing and selling crystal meth.',
+        starring: 'Bryan Cranston, Aaron Paul, Anna Gunn, Dean Norris, Betsy Brandt, R.J. Mitte',
+        genres: 'TV Shows, TV Dramas, Crime TV Shows, Crime TV Dramas'
       },
       '65': {
         name: 'Leprechaun',
