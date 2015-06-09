@@ -38,7 +38,7 @@ import {Rating} from 'components/Rating';
     <button (click)="back()">Back</button>
 
     <h3 class="movie-name">
-      {{ state?.name | async }}
+      {{ model?.getValue('name') | async }}
     </h3>
     <hr>
     <div class="side-details">

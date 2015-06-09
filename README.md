@@ -2,8 +2,15 @@
 
 > Angular 2 FalcorJS
 
-Todo: 
+Todo:
 * update readme
+
+### With the Router
+```bash
+$ webpack
+$ node index.js
+```
+
 
 ### Quick start
 > Clone/Download the repo then edit `App.ts` inside [`/src/app/components/app.ts`](/src/app/App.ts)
@@ -11,6 +18,8 @@ Todo:
 ```bash
 $ npm start # then open your browser and go to http://localhost:8080
 ```
+
+
 
 
 ## File Structure
