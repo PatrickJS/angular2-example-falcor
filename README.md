@@ -2,8 +2,11 @@
 
 > Angular 2 FalcorJS
 
+Todo: 
+* update readme
+
 ### Quick start
-> Clone/Download the repo then edit `app.ts` inside [`/src/app/components/app.ts`](/src/app/components/app.ts)
+> Clone/Download the repo then edit `App.ts` inside [`/src/app/components/app.ts`](/src/app/App.ts)
 
 ```bash
 $ npm start # then open your browser and go to http://localhost:8080
