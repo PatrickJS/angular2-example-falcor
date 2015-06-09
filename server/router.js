@@ -1,7 +1,10 @@
+var util = require('util');
 var FalcorRouter = require('falcor-router');
 var falcor = require('falcor');
 var Rx = require('rx');
 var $ref = falcor.Model.ref;
+
+var movies = require('./movies.json');
 
 function TestRouter(request, routes, options) {
     FalcorRouter.call(this, routes, options);
@@ -10,35 +13,62 @@ function TestRouter(request, routes, options) {
 util.inherits(TestRouter, FalcorRouter);
 
 module.exports = function() {
-
-  return new TestRouter(null, [
+  var routes = [
     {
-      route: "titlesById[{integers}].name",
+      route: "genres[{ranges}]",
       get: function(pathSet) {
-        var titlesById = {}
-        pathSet[1].forEach(function(id) {
-          titlesById[id] = {
-            name: "Jim" + id
-          }
-        })
-        return Rx.Observable.of({
-          jsong: {titlesById: titlesById}
-        })
-      }
-    },
-    {
-      route: "list[{ranges}]",
-      get: function(pathSet) {
-        var list = {}
+        var genres = {}
         pathSet[1].forEach(function(range) {
           for (var index = range.from; index <= range.to; index++) {
-            list[index] = $ref(['titlesById', index])
+            genres[index] = $ref(['titlesById', index])
           }
         });
         return Rx.Observable.of({
-          jsong: {list: list}
-        })
+          jsong: {genres: genres}
+        });
+      }//get
+    }
+  ];
+
+  ([
+    'id',
+    'name',
+    'rating',
+    'seasons',
+    'img',
+    'copy',
+    'starring',
+    'genres'
+  ]).forEach(function(prop) {
+    var config = {
+      route: 'titlesById[{integers}].'+prop,
+      get: function(pathSet) {
+        var delayTime = ~~(Math.random()*500);
+        console.log('\nPATHSET\n', pathSet, '\ndelay', delayTime, '\n');
+
+        var titlesById = {};
+        pathSet[1].forEach(function(id) {
+          titlesById[id] = titlesById[id] || {};
+          titlesById[id][prop] = movies[id][prop];
+        });
+
+        return Rx.Observable.of({
+
+          jsong: {
+            titlesById: titlesById
+          }
+
+        }).delay(delayTime);
+      }
+    };
+    if (prop === 'rating') {
+      config.set = function(jsongPaths) {
+        console.log('rating SET');
+        return Rx.Observable.of(jsongPaths);
       }
     }
-  ]);
+    routes.push(config);
+  });
+
+  return new TestRouter(null, routes);
 }

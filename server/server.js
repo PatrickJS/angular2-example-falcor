@@ -5,7 +5,7 @@ var app = express();
 var morgan = require('morgan');
 
 var FalcorExpress = require('falcor-express');
-var falcorRouter = './router';
+var falcorRouter = require('./router');
 
 
 var webpack = require('webpack');
@@ -20,25 +20,25 @@ module.exports = function() {
   app.use(morgan('dev'));
   app.use(bodyParser.text({ type: 'text/*' }))
 
-  var server = new WebpackDevServer(webpack(require('../webpack.config')), {
-    publicPath: '/__build__',
-    historyApiFallback: true,
-    inline: true,
-    quiet: false,
-    noInfo: false,
-    stats: { colors: true }
-  });
-  server.app.use(app);
+  // var server = new WebpackDevServer(webpack(require('../webpack.config')), {
+  //   publicPath: '/__build__',
+  //   historyApiFallback: true,
+  //   inline: true,
+  //   quiet: false,
+  //   noInfo: false,
+  //   stats: { colors: true }
+  // });
+  // server.app.use(app);
 
 
   // Simple middleware to handle get/post
   app.use('/model.json', FalcorExpress.dataSourceRoute(function(req, res) {
-      return falcorRouter
+      return falcorRouter()
   }));
 
   app.use(express.static('public'));
 
-  return server;
+  return app;
 }
 
 //
