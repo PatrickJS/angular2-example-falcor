@@ -16,9 +16,9 @@ class ModelRoot {
 export class FalcorModel extends Model {
   constructor(@Inject('initialCache') cache) {
     super({
-      cache: cache
-      // source: new XMLHttpSource('model.json', 15000),
-      // root: new ModelRoot()
+      cache: cache,
+      source: new XMLHttpSource('model.json', 15000),
+      root: new ModelRoot()
     });
   }
 }
