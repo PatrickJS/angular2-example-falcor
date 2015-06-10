@@ -40,132 +40,126 @@ function isObservable(obs) {
   return obs && obs.subscribe && typeof obs.subscribe === 'function';
 }
 
-class RxPipe extends ObservablePipe {
-  _ref: ChangeDetectorRef;
-  _subscription: any;
-  _observable: any;
-  _latestValue: Object;
-  _immediateScheduler: any;
-  constructor(ref: ChangeDetectorRef) { super(ref); }
-  supports(obs) { return isObservable(obs); }
-  _subscribe(obs) {
-    this._observable = obs;
-    this._immediateScheduler = (<any>Rx.Scheduler).immediate;
-    this._subscription = obs.
-      observeOn(this._immediateScheduler).
-      subscribe(value => {
-        setTimeout(_ => this._updateLatestValue(value));
-      },
-      e => { throw e; });
-  }
-  onDestroy() {
-    this._immediateScheduler = null;
-    super.onDestroy();
-  }
-  _updateLatestValue(value: Object) {
-    this._latestValue = value;
-    if (this._ref) {
-      this._ref.requestCheck();
-    }
-  }
-}
-
-// class RxPipe extends Pipe {
+// class RxPipe extends ObservablePipe {
 //   _ref: ChangeDetectorRef;
-//   _promise: Promise<any>;
-
-//   _latestValue: Object;
-//   _latestReturnedValue: Object;
-
-
-//   _immediateScheduler: any;
 //   _subscription: any;
 //   _observable: any;
-
-//   constructor(ref: ChangeDetectorRef) {
-//     super();
-//     console.log('RxPipe2');
-//     this._ref = ref;
-//     this._latestValue = null;
-//     this._latestReturnedValue = null;
-//     this._immediateScheduler = null;
-//     this._subscription = null;
-//     this._observable = null;
-//     // this._promise = Promise.resolve(true);
-//   }
-
-//   supports(obs): boolean { return isObservable(obs); }
-
-//   onDestroy(): void {
-//     if (isPresent(this._subscription)) {
-//       this._dispose();
-//     }
-//   }
-
-//   transform(obs: any): any {
-//     if (isBlank(this._subscription)) {
-//       this._subscribe(obs);
-//       return null;
-//     }
-
-//     if (obs !== this._observable) {
-//       this._dispose();
-//       return this.transform(obs);
-//     }
-
-//     // if (this._latestValue === this._latestReturnedValue) {
-//     //   return WrappedValue.wrap(this._latestReturnedValue);
-//     //   // return this._latestReturnedValue;
-//     // } else {
-//       // this._latestReturnedValue = this._latestValue;
-//       return WrappedValue.wrap(this._latestValue);
-//     // }
-//   }
-
-//   _subscribe(obs: any): void {
+//   _latestValue: Object;
+//   _immediateScheduler: any;
+//   constructor(ref: ChangeDetectorRef) { super(ref); }
+//   supports(obs) { return isObservable(obs); }
+//   _subscribe(obs) {
 //     this._observable = obs;
 //     this._immediateScheduler = (<any>Rx.Scheduler).immediate;
 //     this._subscription = obs.
 //       observeOn(this._immediateScheduler).
-//       subscribe(
-//       value => {
-//         // if (!this._ref) {
-//           // this._promise.then(_ => {
-//             // console.log('next promise', value);
-//             // this._updateLatestValue(value);
-//           // });
-//         // } else {
-//           // setTimeout(_ => {
-//             console.log('2 next timeout', value);
-//             this._updateLatestValue(value);
-//           // });
-//         // }
-//       },
-//       e => { throw e; }
-//       // value => {
-//         // console.log('COMPLETE', value);
+//       subscribe(value => {
 //         // setTimeout(_ => {
-//         // })
-//       // }
-//     );
+//           this._updateLatestValue(value)
+//         // });
+//       },
+//       e => { throw e; });
 //   }
-
-//   _dispose(): void {
-//     this._subscription.dispose();
-//     this._latestValue = null;
-//     this._latestReturnedValue = null;
+//   onDestroy() {
 //     this._immediateScheduler = null;
-//     this._subscription = null;
-//     this._observable = null;
+//     super.onDestroy();
 //   }
-
-//   _updateLatestValue(value: any): void {
+//   _updateLatestValue(value: Object) {
 //     this._latestValue = value;
 //     if (this._ref) {
 //       this._ref.requestCheck();
 //     }
 //   }
 // }
+class RxPipe extends Pipe {
+  _ref: ChangeDetectorRef;
+  _promise: Promise<any>;
+
+  _latestValue: Object;
+  _latestReturnedValue: Object;
+
+
+  _immediateScheduler: any;
+  _subscription: any;
+  _observable: any;
+  _pending: any;
+
+
+  constructor(ref: ChangeDetectorRef) {
+    super();
+    this._ref = ref;
+    this._latestValue = null;
+    this._latestReturnedValue = null;
+    this._immediateScheduler = null;
+    this._subscription = null;
+    this._observable = null;
+    this._pending = null;
+  }
+
+  supports(obs): boolean { return isObservable(obs); }
+
+  onDestroy(): void {
+    if (isPresent(this._subscription)) {
+      this._dispose();
+    }
+    this._latestReturnedValue = null;
+    this._latestValue = null;
+    this._pending = null;
+  }
+
+  transform(obs: any): any {
+    if (isBlank(this._subscription)) {
+      this._subscribe(obs);
+      return this._latestReturnedValue;
+    }
+
+    if (isBlank(this._latestReturnedValue)) {
+      this._pending = obs;
+    } else if (obs !== this._observable) {
+      this._dispose();
+      return this.transform(obs);
+    }
+
+    if (this._latestValue === this._latestReturnedValue) {
+      return this._latestReturnedValue;
+    } else {
+      this._latestReturnedValue = this._latestValue;
+      return WrappedValue.wrap(this._latestValue);
+    }
+  }
+
+  _subscribe(obs: any): void {
+    this._observable = obs;
+    this._immediateScheduler = (<any>Rx.Scheduler).immediate;
+    this._subscription = obs.
+      observeOn(this._immediateScheduler).
+      subscribe(
+        value => this._updateLatestValue(value),
+        e => { throw e; }
+      );
+  }
+
+  _dispose(): void {
+    this._subscription.dispose();
+    // this._latestValue = null;
+    this._subscription = null;
+    this._observable = null;
+    this._immediateScheduler = null;
+  }
+
+  _updateLatestValue(value: any): void {
+    this._latestValue = value;
+    if (isPresent(this._ref)) {
+      this._ref.requestCheck();
+    }
+    if (isPresent(this._pending)) {
+      this._dispose();
+      let obs = this._pending;
+      this._pending = null;
+      this.transform(obs);
+    }
+  }
+}
 
 
 
@@ -217,27 +211,33 @@ var rxAsync = [ new RxPipeFactory() ].concat(async);
 //   create(ref: any): Pipe { return this }
 // }
 
-// class InvokePipe {
-//   onDestroy() {}
-//   supports(val) { return true }
-//   transform(val) {
-//     return function getProp(prop, ...args) {
-//       return (val && prop && val[prop]) ? val[prop](args) : val;
-//     }
-//   }
-// }
+class OncePipe {
+  once: any;
+  constructor() {
+    this.once = null;
+  }
+  onDestroy() {}
+  supports(val) { return true }
+  transform(val) {
+    if (val && !this.once) {
+      this.once = val;
+    }
+    return this.once;
+  }
+}
 
-// class InvokePipeFactory {
-//   // constructor() { super(); }
-//   supports(val) { return true }
-//   create(ref: any): Pipe { return new InvokePipe(); }
-// }
+class OncePipeFactory {
+  // constructor() { super(); }
+  supports(val) { return true }
+  create(ref: any): Pipe { return new OncePipe(); }
+}
 
 // var get = [ new GetPipeFactory(), new NullPipeFactory() ];
-// var invoke = [ new InvokePipeFactory(), new NullPipeFactory() ];
+var once = [ new OncePipeFactory(), new NullPipeFactory() ];
 
 var rxPipes = Object.assign({}, defaultPipes, {
-  'async': rxAsync
+  'async': rxAsync,
+  'once': once
   // 'async2': [ new RxPipeFactory2(), new NullPipeFactory() ],
   // 'rx': [ new RxPipeFactory() ],
   // 'log': [ new LogPipe() ],
