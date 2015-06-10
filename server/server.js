@@ -17,6 +17,7 @@ module.exports = function() {
 
   // Express App
   var app = express();
+  var router = express.Router();
 
 
   app.use(morgan('dev'));
@@ -32,6 +33,30 @@ module.exports = function() {
   // });
   // server.app.use(app);
 
+  var iso = require('./ng2Engine');
+  app.engine('ng2.html', iso.ng2Engine);
+  app.set('views', 'server');
+  app.set('view engine', 'ng2.html');
+  app.set('view options', { doctype: 'html' });
+
+  function ngApp(req, res) {
+    res.render('index', {
+      // clientOnly: true,
+      Params: {
+        url: req.url,
+        originalUrl: req.originalUrl,
+        path: req.path,
+        params: req.params,
+        query: req.query,
+        cookie: req.cookies,
+        signedCookies: req.signedCookies
+      },
+      Component: require('./dist/app/App').App
+    });
+  }
+
+  router.route('/').get(ngApp);
+  app.use(router);
 
   // Simple middleware to handle get/post
   app.use('/model.json', FalcorExpress.dataSourceRoute(function(req, res) {
