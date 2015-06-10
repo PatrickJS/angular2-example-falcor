@@ -24,6 +24,7 @@
   "dependencies": {
     "angular2": "2.0.0-alpha.26",
     "body-parser": "^1.12.4",
+    "connect-history-api-fallback": "^1.1.0",
     "express": "^4.12.4",
     "falcor": "git+ssh://git@github.com/Netflix/falcor.git",
     "falcor-browser": "git+ssh://git@github.com/Netflix/falcor-browser.git",

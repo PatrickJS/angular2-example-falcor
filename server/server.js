@@ -1,8 +1,10 @@
 var util = require('util');
 var express = require('express');
 var bodyParser = require('body-parser');
-var app = express();
 var morgan = require('morgan');
+var history = require('connect-history-api-fallback');
+
+var app = express();
 
 var FalcorExpress = require('falcor-express');
 var falcorRouter = require('./router');
@@ -36,6 +38,8 @@ module.exports = function() {
       return falcorRouter()
   }));
 
+
+  app.use(history());
   app.use(express.static('public'));
 
   return app;
