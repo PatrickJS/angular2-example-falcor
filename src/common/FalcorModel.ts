@@ -1,7 +1,8 @@
 import {bind, Inject} from 'angular2/di';
 
-import {Model} from 'falcor';
-import {XMLHttpSource} from 'falcor-browser';
+import * as falcor from 'falcor';
+var Model = falcor.Model;
+// import {XMLHttpSource} from 'falcor-browser';
 
 import {initialCache} from './initialCache';
 
@@ -17,8 +18,8 @@ export class FalcorModel extends Model {
   constructor(@Inject('initialCache') cache) {
     super({
       cache: cache,
-      source: new XMLHttpSource('model.json', 15000),
-      root: new ModelRoot()
+      // source: new XMLHttpSource('model.json', 15000),
+      // root: new ModelRoot()
     });
   }
 }

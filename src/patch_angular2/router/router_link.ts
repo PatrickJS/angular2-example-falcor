@@ -30,9 +30,9 @@ import {Router, Location} from 'angular2/router';
 @Directive({
   selector: '[router-link]',
   properties: ['route: routerLink', 'params: routerParams'],
-  hostListeners: {
-    '^click': 'onClick($event)'
-  }
+  // hostListeners: {
+  //   '^click': 'onClick($event)'
+  // }
 })
 export class RouterLink {
   private _domEl;
@@ -70,7 +70,6 @@ export class RouterLink {
         this._navigationHref = router.generate(this._route, this._params);
         this._visibleHref = this._location.normalizeAbsolutely(this._navigationHref);
       } catch(e) {
-        debugger;
       }
       // Keeping the link on the element to support contextual menu `copy link`
       // and other in-browser affordances.

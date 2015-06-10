@@ -1,9 +1,9 @@
 import {Promise, PromiseWrapper} from 'angular2/src/facade/async';
 import {isBlank, isPresent} from 'angular2/src/facade/lang';
 
-import {Component, View, Directive, Attribute, DynamicComponentLoader, ComponentRef, ElementRef, AppViewManager} from 'angular2/angular2';
+import {Directive, Attribute, DynamicComponentLoader, ComponentRef, ElementRef} from 'angular2/angular2';
 import {Injector, bind} from 'angular2/di';
-import {ViewContainerRef, ProtoViewRef} from 'angular2/core';
+// import {ViewContainerRef, ProtoViewRef} from 'angular2/core';
 
 import {Router, RouteParams} from 'angular2/router';
 import {Instruction} from 'angular2/src/router/instruction';

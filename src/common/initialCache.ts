@@ -1,4 +1,5 @@
-import {Model} from 'falcor';
+import * as falcor from 'falcor';
+var Model = falcor.Model;
 var $ref = Model.ref;
 
 export var initialCache = {
