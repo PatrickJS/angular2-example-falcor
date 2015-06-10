@@ -10,11 +10,18 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "listFiles": true,
-    "outDir": "dist"
+    "outDir": "server/dist"
   },
   "files": [
     "typings/tsd.d.ts",
-    "src/components/app.ts",
+    "src/app/App.ts",
+    "src/app/components/Rating.ts",
+    "src/app/directives/AssignLocal.ts",
+    "src/app/directives/Autofocus.ts",
+    "src/app/directives/directives.ts",
+    "src/app/services/services.ts",
+    "src/common/BrowserDomAdapter.ts",
+    "src/common/FalcorModel.ts",
     "src/bootstrap.ts"
   ]
 }
