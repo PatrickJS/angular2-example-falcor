@@ -5,6 +5,7 @@ declare module "falcor" {
     static ref: any;
     bind(val: any, pathRoute: any): any;
     bindSync(...path: any[]): any;
+    softBind(...path: any[]): any;
     setCache(...path: any[]): any;
     get(...path: any[]): any;
     set(path: any, value: any): any;
