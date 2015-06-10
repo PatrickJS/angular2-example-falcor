@@ -63,8 +63,14 @@ module.exports = function() {
     };
     if (prop === 'rating') {
       config.set = function(jsongPaths) {
-        console.log('rating SET');
-        return Rx.Observable.of(jsongPaths);
+        var delayTime = ~~(Math.random()*500);
+        console.log('\nrating SET\n', JSON.stringify(jsongPaths), '\n');
+
+        return Rx.Observable.of({
+
+          jsong: jsongPaths
+
+        }).delay(delayTime);
       }
     }
     routes.push(config);

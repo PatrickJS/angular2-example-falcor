@@ -97,6 +97,10 @@ export class MovieDetails {
 
   onRating(event) {
     console.log('onRating', event);
+    this.falcorModel.set({
+      path: [].concat(this.path, 'rating'),
+      value: event.count
+    }).then(value => console.log('value', value));
   }
 }
 
