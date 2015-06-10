@@ -50,7 +50,7 @@ export class Rating {
   onChange() {
     if (this.rate) {
       var rate = Math.abs(this.rate - this.stars.length)
-      this.setRate(rate)
+      this.setRate(rate);
     }
   }
   setRate(num) {
