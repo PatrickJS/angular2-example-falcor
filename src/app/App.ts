@@ -10,7 +10,7 @@ import * as Rx from 'rx';
 // Import all of our custom app directives
 import {coreDirectives} from 'angular2/directives';
 // import {routerDirectives} from 'angular2/router';
-import {routerDirectives} from '../patch_angular2/router';
+import {routerDirectives, RouterLink, RouterOutlet} from '../patch_angular2/router';
 // App
 import {appDirectives} from './directives/directives';
 
@@ -23,113 +23,113 @@ import {FalcorModel} from '../common/FalcorModel';
 import {Rating} from './components/Rating';
 
 
-// Components
+// // Components
 
-/*
+// /*
 
-*/
+// */
 
-@Component({
-  selector: 'movie-details'
-})
-@View({
-  directives: [ coreDirectives, appDirectives, Rating ],
-  template: `
-  <div>
+// @Component({
+//   selector: 'movie-details'
+// })
+// @View({
+//   directives: [ coreDirectives, appDirectives, Rating ],
+//   template: `
+//   <div>
 
-    <button (click)="location.back()">Back</button>
+//     <button (click)="location.back()">Back</button>
 
-    <h3>{{ model?.getValue('name') | async }}</h3>
+//     <h3>{{ model?.getValue('name') | async }}</h3>
 
-    <hr>
-    <div class="side-details">
-      <div>
-        <img [src]="(model?.getValue('img') | async) || '' ">
-      </div>
-      <b>Rating</b>: <rating [rate]="model?.getValue('rating') | async" (click)="onRating($event)")></rating>
-    </div>
+//     <hr>
+//     <div class="side-details">
+//       <div>
+//         <img [src]="(model?.getValue('img') | async) || '' ">
+//       </div>
+//       <b>Rating</b>: <rating [rate]="model?.getValue('rating') | async" (click)="onRating($event)")></rating>
+//     </div>
 
-    <div class="movie-copy">
-      <p>
-        {{ model?.getValue('copy') | async }}
-      </p>
-      <ul>
-        <li>
-          <b>Starring</b>: {{ model?.getValue('starring') | async }}
-        </li>
-        <li>
-          <b>Genres</b>: {{ model?.getValue('genres') | async }}
-        </li>
-      <ul>
-    </div>
+//     <div class="movie-copy">
+//       <p>
+//         {{ model?.getValue('copy') | async }}
+//       </p>
+//       <ul>
+//         <li>
+//           <b>Starring</b>: {{ model?.getValue('starring') | async }}
+//         </li>
+//         <li>
+//           <b>Genres</b>: {{ model?.getValue('genres') | async }}
+//         </li>
+//       <ul>
+//     </div>
 
-  <div>
-  `
-  //   </div>
-  // </div>
-})
-@RouteConfig({
-  path: '/details/:id/:path', as: 'details', component: MovieDetails
-})
-export class MovieDetails {
-  _subscription: any;
-  path: string;
-  model: any;
-  state: any = {};
-  constructor(
-    // public router: Router,
-    public routeParams: RouteParams,
-    public falcorModel: FalcorModel,
-    public location: Location) {
+//   <div>
+//   `
+//   //   </div>
+//   // </div>
+// })
+// @RouteConfig({
+//   path: '/details/:id/:path', as: 'details', component: MovieDetails
+// })
+// export class MovieDetails {
+//   _subscription: any;
+//   path: string;
+//   model: any;
+//   state: any = {};
+//   constructor(
+//     // public router: Router,
+//     public routeParams: RouteParams,
+//     public falcorModel: FalcorModel,
+//     public location: Location) {
 
-    if (routeParams.get('path')) {
-      // problably could be refactored into a client version of falcor-router
-      this.path = this.getUrlPath(routeParams.get('path'));
-      this._subscription = this.falcorModel.
-        bind(this.path, 'name').
-        subscribe(model => this.model = model);
-    }//routeParams
+//     if (routeParams.get('path')) {
+//       // problably could be refactored into a client version of falcor-router
+//       this.path = this.getUrlPath(routeParams.get('path'));
+//       this._subscription = this.falcorModel.
+//         bind(this.path, 'name').
+//         subscribe(model => this.model = model);
+//     }//routeParams
 
-  }
-  getUrlPath(path) {
-    return JSON.parse(decodeURIComponent(path));
-  }
+//   }
+//   getUrlPath(path) {
+//     return JSON.parse(decodeURIComponent(path));
+//   }
 
-  onRating(event) {
-    console.log('onRating', event);
-  }
-}
+//   onRating(event) {
+//     console.log('onRating', event);
+//   }
+// }
 
 
 
-@Component({
-  selector: 'movie',
-  properties: ['model'],
-})
-@View({
-  directives: [ routerDirectives, coreDirectives, appDirectives ],
-  template: `
-  <div class="movie">
-    <a router-link="details" [router-params]="{
-      'id':   (model?.getValue('id') | async),
-      'path': stringify(model?.toJSON()?.value)
-    }">
+// @Component({
+//   selector: 'movie',
+//   properties: ['model'],
+// })
+// @View({
+//   directives: [ routerDirectives, coreDirectives, appDirectives ],
+//   template: `
+//   <div class="movie">
+//     <a router-link="details" [router-params]="{
+//       'id':   (model?.getValue('id') | async),
+//       'path': stringify(model?.toJSON()?.value)
+//     }">
 
-      <img [src]="model?.getValueSync('img')" class="boxShotImg movie-box-image">
+//       <img [src]="model?.getValueSync('img')" class="boxShotImg movie-box-image">
 
-    </a>
-  </div>
-  `
-})
-export class Movie {
-  stringify(str) {
-    // return encodeURIComponent(JSON.stringify(str));
-    return JSON.stringify(str);
-  }
-  constructor(public router: Router) {
-  }
+//     </a>
+//   </div>
+//   `
+// })
+// export class Movie {
+//   stringify(str) {
+//     // return encodeURIComponent(JSON.stringify(str));
+//     return JSON.stringify(str);
+//   }
+//   constructor(public router: Router) {
+//   }
 
-}
+// }
 
 
 @Component({
@@ -138,16 +138,13 @@ export class Movie {
   lifecycle: [onChange]
 })
 @View({
-  directives: [ routerDirectives, coreDirectives, appDirectives, Movie, MovieDetails ],
+  directives: [ /*routerDirectives,*/ coreDirectives, appDirectives/*, Movie, MovieDetails*/ ],
   template: `
   <div>
     <h2 class="genre-name">
-      {{ model?.getValue('name') | async }}
     </h2>
     <div class="scroll-row">
-      <movie
-        *ng-for="var movie of movieList; var $index = index"
-        [model]="model?.bind(['titles', $index], 'img') | async"></movie>
+      <movie></movie>
     </div>
   </div>
   `
@@ -161,10 +158,19 @@ export class GenreList {
   }
   onChange(changes) {
     if (!this.model) return;
-    this.movieList = new Array(Number(this.size));
+    this.movieList = new Array(Number(8));
   }
 
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -172,33 +178,34 @@ export class GenreList {
   selector: 'movies'
 })
 @View({
-  directives: [ routerDirectives, coreDirectives, appDirectives, GenreList ],
+  directives: [ /*routerDirectives, */coreDirectives, appDirectives, GenreList ],
   template: `
   <div>
-    <genre-list
-      *ng-for="var genre of genresList; var $index = index"
-      size="8"
-      [model]="model?.bind(['genres', $index], 'name') | async"></genre-list>
+    <genre-list [model]="model?.bind(['genres', 0], 'name')"></genre-list>
   </div>
   `
 })
 export class Movies {
   genresList: Array<any>;
   constructor(public model: FalcorModel) {
-
-    this.genresList = new Array(4);
+    this.genresList = [1,2,3,4];
 
   }
 
 }
 
+import {routerInjectables} from '../patch_angular2/router';
+import {falcorInjectibles} from '../common/FalcorModel';
+import {rxPipeRegistry} from '../common/rxPipeRegistry';
+
 
 
 @Component({
-  selector: 'app'
+  selector: 'app',
+  appInjector: [routerInjectables, falcorInjectibles, rxPipeRegistry]
 })
 @View({
-  directives: [ routerDirectives, coreDirectives, appDirectives ],
+  directives: [ /*routerDirectives, */coreDirectives, appDirectives, Movies, RouterOutlet ],
   template: `
   <style>
     .title  { font-family: Arial, Helvetica, sans-serif; }
@@ -227,17 +234,18 @@ export class Movies {
   </navbar>
 
   <main>
-    <router-outlet></router-outlet>
+    <movies></movies>
   </main>
   `
 })
 @RouteConfig([
-  { path: '/',            as: 'app',     component: Movies },
-  { path: '/movies',      as: 'movies',  component: Movies },
-  { path: '/details/:id/:path', as: 'details', component: MovieDetails },
+  // { path: '/',            as: 'app',     component: Movies },
+  // { path: '/movies',      as: 'movies',  component: Movies },
+  // { path: '/details/:id/:path', as: 'details', component: MovieDetails },
 ])
 export class App {
   constructor() {
+    console.log('Angular2 + FalcorJS');
 
   }
 }
