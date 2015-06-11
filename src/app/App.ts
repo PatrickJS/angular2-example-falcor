@@ -75,7 +75,6 @@ export class MovieDetails {
   _subscription: any;
   path: string;
   model: any;
-  state: any = {};
   constructor(
     // public router: Router,
     public routeParams: RouteParams,
@@ -100,7 +99,7 @@ export class MovieDetails {
     this.falcorModel.set({
       path: [].concat(this.path, 'rating'),
       value: event.count
-    }).then(value => console.log('value', value));
+    }).then(res => console.log(res.json));
   }
 }
 

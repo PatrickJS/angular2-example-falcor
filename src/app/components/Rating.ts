@@ -45,16 +45,19 @@ export class Rating {
   }
   onClick(event, index) {
     var count = Math.abs(index - this.stars.length);
+    this.setRate(index);
     this.click.next({ event, count });
   }
   onChange() {
-    if (this.rate) {
+    if (this.rate !== null) {
+      // console.log('rate', this.rate);
       var rate = Math.abs(this.rate - this.stars.length)
       this.setRate(rate);
     }
   }
   setRate(num) {
     // reversed due to css highlighting
+
     for (let counter = 0; counter < this.stars.length; counter++) {
       if (counter < num) {
         if (this.stars[counter] === '☆') { continue };
@@ -64,5 +67,6 @@ export class Rating {
         this.stars[counter] = '★';
       }//counter
     }//for
+
   }//setRate
 }
