@@ -71,6 +71,7 @@ function isObservable(obs) {
 //     }
 //   }
 // }
+var id = 0;
 class RxPipe extends Pipe {
   _ref: ChangeDetectorRef;
   _promise: Promise<any>;
@@ -83,6 +84,7 @@ class RxPipe extends Pipe {
   _subscription: any;
   _observable: any;
   _pending: any;
+  _count: any;
 
 
   constructor(ref: ChangeDetectorRef) {
@@ -94,6 +96,8 @@ class RxPipe extends Pipe {
     this._subscription = null;
     this._observable = null;
     this._pending = null;
+    this._id = id++;
+    this._count = 0;
   }
 
   supports(obs): boolean { return isObservable(obs); }
@@ -108,6 +112,10 @@ class RxPipe extends Pipe {
   }
 
   transform(obs: any): any {
+    this._count++;
+    if (this._id === 1) {
+      console.log('transform count', this._count)
+    }
     if (isBlank(this._subscription)) {
       this._subscribe(obs);
       return this._latestReturnedValue;
@@ -134,13 +142,26 @@ class RxPipe extends Pipe {
     this._subscription = obs.
       observeOn(this._immediateScheduler).
       subscribe(
-        value => this._updateLatestValue(value),
-        e => { throw e; }
+        value => {
+          if (this._id === 1) {
+            console.log('next', value)
+          }
+          this._updateLatestValue(value)
+        },
+        e => { throw e; },
+        _ => {
+          if (this._id === 1) {
+            console.log('complete')
+          }
+          this._dispose()
+        }
       );
   }
 
   _dispose(): void {
-    this._subscription.dispose();
+    if (isPresent(this._subscription)) {
+      this._subscription.dispose();
+    }
     // this._latestValue = null;
     this._subscription = null;
     this._observable = null;
