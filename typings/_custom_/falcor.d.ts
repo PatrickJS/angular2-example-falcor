@@ -8,7 +8,9 @@ declare module "falcor" {
     softBind(...path: any[]): any;
     setCache(...path: any[]): any;
     get(...path: any[]): any;
-    set(path: any, value: any): any;
+    set(jsongEnv: any, observer?:any): any;
+    getValue(...path: any[]): any;
+    setValue(...path: any[]): any;
   }
   function get();
   function set();

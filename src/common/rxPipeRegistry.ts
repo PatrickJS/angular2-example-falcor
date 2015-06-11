@@ -84,8 +84,9 @@ class RxPipe extends Pipe {
   _subscription: any;
   _observable: any;
   _pending: any;
-  _count: any;
 
+  _id: any
+  _count: any;
 
   constructor(ref: ChangeDetectorRef) {
     super();

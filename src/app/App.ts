@@ -72,7 +72,6 @@ import {Rating} from './components/Rating';
   path: '/details/:id/:path', as: 'details', component: MovieDetails
 })
 export class MovieDetails {
-  _subscription: any;
   path: string;
   model: any;
   constructor(
@@ -84,7 +83,7 @@ export class MovieDetails {
     if (routeParams.get('path')) {
       // problably could be refactored into a client version of falcor-router
       this.path = this.getUrlPath(routeParams.get('path'));
-      this._subscription = this.falcorModel.
+      this.falcorModel.
         bind(this.path, 'name').
         subscribe(model => this.model = model);
     }//routeParams
@@ -97,9 +96,10 @@ export class MovieDetails {
   onRating(event) {
     console.log('onRating', event);
     this.falcorModel.set({
-      path: [].concat(this.path, 'rating'),
+      path:  [].concat(this.path, 'rating'),
       value: event.count
-    }).then(res => console.log(res.json));
+    })
+    .then(res => console.log(res))
   }
 }
 
@@ -118,7 +118,7 @@ export class MovieDetails {
       'path': stringify(model?.toJSON()?.value)
     }">
 
-      <img [src]="model?.getValueSync('img')" class="boxShotImg movie-box-image">
+      <img [src]="model?.getValueSync('img') || '' " class="boxShotImg movie-box-image">
 
     </a>
   </div>
@@ -129,6 +129,7 @@ export class Movie {
     // return encodeURIComponent(JSON.stringify(str));
     return JSON.stringify(str);
   }
+
   constructor(public router: Router) {
   }
 
@@ -138,7 +139,7 @@ export class Movie {
 @Component({
   selector: 'genre-list',
   properties: ['model', 'size'],
-  lifecycle: [onChange]
+  lifecycle: [onInit]
 })
 @View({
   directives: [ routerDirectives, coreDirectives, appDirectives, Movie, MovieDetails ],
@@ -157,13 +158,12 @@ export class Movie {
 })
 export class GenreList {
   model: any
-  id: any;
   movieList: Array<any>;
   constructor(@Attribute('size') public size: string) {
 
   }
-  onChange(changes) {
-    if (!this.model) return;
+
+  onInit() {
     this.movieList = new Array(Number(this.size));
   }
 

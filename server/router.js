@@ -66,6 +66,8 @@ module.exports = function() {
         var delayTime = ~~(Math.random()*500);
         console.log('\nrating SET\n', JSON.stringify(jsongPaths), '\n');
 
+        // Object.assign(movies, jsongPaths.titlesById);
+
         return Rx.Observable.of({
 
           jsong: jsongPaths
