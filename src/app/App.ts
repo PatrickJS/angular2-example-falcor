@@ -18,16 +18,8 @@ import {appDirectives} from './directives/directives';
 import {FalcorModel} from '../common/FalcorModel';
 // import {FalcorView} from 'falcor-angular';
 
-
 // Components
 import {Rating} from './components/Rating';
-
-
-// Components
-
-/*
-
-*/
 
 @Component({
   selector: 'movie-details'
@@ -65,8 +57,6 @@ import {Rating} from './components/Rating';
 
   <div>
   `
-  //   </div>
-  // </div>
 })
 @RouteConfig({
   path: '/details/:id/:path', as: 'details', component: MovieDetails
@@ -75,7 +65,6 @@ export class MovieDetails {
   path: string;
   model: any;
   constructor(
-    // public router: Router,
     public routeParams: RouteParams,
     public falcorModel: FalcorModel,
     public location: Location) {
