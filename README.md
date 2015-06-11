@@ -5,19 +5,26 @@
 Todo:
 * update readme
 
+
+### Quick start
+> Clone/Download the repo then edit `App.ts` inside [`/src/app/App.ts`](/src/app/App.ts)
+
+```bash
+$ npm start # then open your browser and go to http://localhost:8080
+```
+
+
 ### With the Router
 ```bash
 $ webpack
 $ node index.js
 ```
-
-
-### Quick start
-> Clone/Download the repo then edit `App.ts` inside [`/src/app/components/app.ts`](/src/app/App.ts)
-
+wating files
 ```bash
-$ npm start # then open your browser and go to http://localhost:8080
+$ webpack -w
+$ nodemon index.js
 ```
+
 
 
 
