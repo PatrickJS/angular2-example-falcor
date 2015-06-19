@@ -25,12 +25,13 @@ export class RouterOutlet {
   private _componentRef: ComponentRef;
   private _elementRef: ElementRef;
   private _currentInstruction: Instruction;
+  _parentRouter: any;
 
   constructor(
     elementRef: ElementRef,
     private _loader: DynamicComponentLoader,
-    private _parentRouter: Router,
     private _injector: Injector,
+    _parentRouter: Router,
     @Attribute('name') nameAttr: string) {
     // TODO: reintroduce with new // sibling routes
     // if (isBlank(nameAttr)) {
@@ -42,6 +43,8 @@ export class RouterOutlet {
     this._childRouter = null;
     this._componentRef = null;
     this._currentInstruction = null;
+    // this._parentRouter = _parentRouter.parent || _parentRouter;
+    this._parentRouter = _parentRouter;
     this._parentRouter.registerOutlet(this);
   }
 
@@ -79,13 +82,12 @@ export class RouterOutlet {
 
 
   deactivate(): any {
-    var childRouter = (isPresent(this._childRouter) ? this._childRouter.deactivate() : PromiseWrapper.resolve(true))
+    var childRouter = (isPresent(this._childRouter) ? this._childRouter.deactivate.bind(this._childRouter)() : PromiseWrapper.resolve(true))
     return childRouter.then(_ => {
       if (isPresent(this._componentRef)) {
         this._componentRef.dispose();
-        this._componentRef = null;
+        // this._componentRef = null;
       }
-      return _;
     });
   }
 

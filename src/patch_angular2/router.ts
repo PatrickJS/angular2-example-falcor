@@ -1,10 +1,10 @@
 export {RouterLink} from './router/router_link';
-export {RouterOutlet} from './router/router_outlet';
-// export {RouterOutlet} from 'angular2/router';
+// export {RouterOutlet} from './router/router_outlet';
+export {RouterOutlet} from 'angular2/router';
 
 import {RouterLink} from './router/router_link';
-// import {RouterOutlet} from 'angular2/router';
-import {RouterOutlet} from './router/router_outlet';
+import {RouterOutlet} from 'angular2/router';
+// import {RouterOutlet} from './router/router_outlet';
 
 export var routerDirectives: Array<any> = [RouterOutlet, RouterLink];
 

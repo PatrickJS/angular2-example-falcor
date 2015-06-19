@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts" />
 
 // Angular 2
-import {Attribute, Directive, Component, View, onChange, onDestroy, onInit} from 'angular2/angular2';
+import {Attribute, Directive, Component, View, onChange, onDestroy, onInit, ON_PUSH} from 'angular2/angular2';
 import {bind, Inject} from 'angular2/di';
 import {RouteConfig, Router, RouteParams, Location} from 'angular2/router';
 
@@ -18,16 +18,9 @@ import {appDirectives} from './directives/directives';
 import {FalcorModel} from '../common/FalcorModel';
 // import {FalcorView} from 'falcor-angular';
 
-
 // Components
 import {Rating} from './components/Rating';
 
-
-// Components
-
-/*
-
-*/
 
 @Component({
   selector: 'movie-details'
@@ -107,7 +100,8 @@ export class MovieDetails {
 
 @Component({
   selector: 'movie',
-  properties: ['model'],
+  // changeDetection: ON_PUSH,
+  properties: ['model']
 })
 @View({
   directives: [ routerDirectives, coreDirectives, appDirectives ],
@@ -118,7 +112,7 @@ export class MovieDetails {
       'path': stringify(model?.toJSON()?.value)
     }">
 
-      <img [src]="model?.getValueSync('img') || '' " class="boxShotImg movie-box-image">
+      <img [src]="(model?.getValue('img') | async) || '' " class="boxShotImg movie-box-image">
 
     </a>
   </div>
@@ -138,6 +132,7 @@ export class Movie {
 
 @Component({
   selector: 'genre-list',
+  // changeDetection: ON_PUSH,
   properties: ['model', 'size'],
   lifecycle: [onInit]
 })
@@ -151,7 +146,8 @@ export class Movie {
     <div class="scroll-row">
       <movie
         *ng-for="var movie of movieList; var $index = index"
-        [model]="model?.bind(['titles', $index], 'img') | async"></movie>
+        [model]="model?.bind(['titles', $index], 'img') | async">
+      </movie>
     </div>
   </div>
   `
@@ -172,7 +168,7 @@ export class GenreList {
 
 
 @Component({
-  selector: 'movies'
+  selector: 'movies',
 })
 @View({
   directives: [ routerDirectives, coreDirectives, appDirectives, GenreList ],
@@ -181,7 +177,8 @@ export class GenreList {
     <genre-list
       *ng-for="var genre of genresList; var $index = index"
       size="8"
-      [model]="model?.bind(['genres', $index], 'name') | async"></genre-list>
+      [model]="model?.bind(['genres', $index], 'name') | async">
+    </genre-list>
   </div>
   `
 })
@@ -235,9 +232,10 @@ export class Movies {
   `
 })
 @RouteConfig([
-  { path: '/',            as: 'app',     component: Movies },
-  { path: '/movies',      as: 'movies',  component: Movies },
-  { path: '/details/:id/:path', as: 'details', component: MovieDetails },
+  { path: '/', redirectTo: '/browse' },
+  { path: '/browse',          as: 'app',     component: Movies },
+  { path: '/movies',        as: 'movies',  component: Movies },
+  { path: '/details/:path', as: 'details', component: MovieDetails },
 ])
 export class App {
   constructor() {

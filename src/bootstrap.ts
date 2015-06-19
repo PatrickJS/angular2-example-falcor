@@ -3,7 +3,6 @@
 // Angular 2
 import {bootstrap} from 'angular2/angular2';
 
-
 // include any injectables
 // import {routerInjectables} from 'angular2/router';
 import {routerInjectables} from './patch_angular2/router';
