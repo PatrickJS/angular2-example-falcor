@@ -114,6 +114,7 @@ export var initialCache = {
       id: '89',
       name: 'Arrested Development',
       seasons: 4,
+      rating: 2,
       img: 'http://cdn8.nflximg.net/webp/1088/11741088.webp',
       starring: 'Jason Bateman, Portia de Rossi, Will Arnett',
       genres: 'Sitcoms, TV Shows, TV Comedies',
