@@ -63,6 +63,7 @@ declare module "angular2/src/router/instruction" {
     component: any;
     params: any;
     reuse: any;
+    child: any;
   }
 }
 
@@ -277,7 +278,7 @@ declare module "angular2/router" {
     renavigate(): Promise<any>;
     generate(name:string, params:any): string;
     subscribe(onNext: Function): void;
-    registerOutlet(context: any, name: any):any;
+    registerOutlet(context: any):any;
     childRouter: any
   }
   class RootRouter {
