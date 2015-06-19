@@ -8,7 +8,6 @@ import {ViewContainerRef, ProtoViewRef} from 'angular2/core';
 import {Router, RouteParams} from 'angular2/router';
 import {Instruction} from 'angular2/src/router/instruction';
 
-
 /**
  * A router outlet is a placeholder that Angular dynamically fills based on the application's route.
  *
@@ -17,58 +16,49 @@ import {Instruction} from 'angular2/src/router/instruction';
  * ```
  * <router-outlet></router-outlet>
  * ```
- *
- * Route outlets can also optionally have a name:
- *
- * ```
- * <router-outlet name="side"></router-outlet>
- * <router-outlet name="main"></router-outlet>
- * ```
- *
  */
 @Directive({
-  selector: 'router-outlet',
-  properties: ['routerOutlet']
+  selector: 'router-outlet'
 })
-// @View({template: '<content></content>'})
 export class RouterOutlet {
-  private _childRouter: Router;
+  private _childRouter: Router|any;
   private _componentRef: ComponentRef;
   private _elementRef: ElementRef;
   private _currentInstruction: Instruction;
-  constructor(elementRef: ElementRef,
-              private _loader: DynamicComponentLoader,
-              private _parentRouter: Router,
-              private _injector: Injector,
-              // private _viewContainer: ViewContainerRef,
-              // private _protoViewRef: ProtoViewRef,
-              @Attribute('name') nameAttr: string) {
-    if (isBlank(nameAttr)) {
-      nameAttr = 'default';
-    }
+
+  constructor(
+    elementRef: ElementRef,
+    private _loader: DynamicComponentLoader,
+    private _parentRouter: Router,
+    private _injector: Injector,
+    @Attribute('name') nameAttr: string) {
+    // TODO: reintroduce with new // sibling routes
+    // if (isBlank(nameAttr)) {
+    //  nameAttr = 'default';
+    //}
 
     this._elementRef = elementRef;
 
     this._childRouter = null;
     this._componentRef = null;
     this._currentInstruction = null;
-    this._parentRouter.registerOutlet(this, nameAttr);
+    this._parentRouter.registerOutlet(this);
   }
 
   /**
-   * Given an instruction, update the contents of this viewport.
+   * Given an instruction, update the contents of this outlet.
    */
   activate(instruction: Instruction): any {
     // if we're able to reuse the component, we just have to pass along the instruction to the
     // component's router
     // so it can propagate changes to its children
-    if ((instruction == this._currentInstruction) ||
-        instruction.reuse && isPresent(this._childRouter)) {
-      return this._childRouter.commit(instruction);
+    if ( (instruction == this._currentInstruction || instruction.reuse) && isPresent(this._childRouter) ) {
+      return this._childRouter.commit(instruction.child);
     }
 
     this._currentInstruction = instruction;
     this._childRouter = this._parentRouter.childRouter(instruction.component);
+
     var outletInjector = this._injector.resolveAndCreateChild([
       bind(RouteParams).toValue(new RouteParams(instruction.params)),
       bind(Router).toValue(this._childRouter)
@@ -76,23 +66,27 @@ export class RouterOutlet {
 
     if (isPresent(this._componentRef)) {
       this._componentRef.dispose();
+      this._componentRef = null;
     }
 
-    // change
-    return this._loader.
-      // loadIntoExistingLocation(instruction.component, this._elementRef, outletInjector).
-      // loadIntoNewLocation(instruction.component, this._elementRef, outletInjector).
-      loadNextToExistingLocation(instruction.component, this._elementRef, outletInjector).
-      then(componentRef => {
-        this._componentRef = componentRef;
-        return this._childRouter.commit(instruction);
-      });
+    return this.deactivate().then(_ => {
+          return this._loader.loadNextToExistingLocation(instruction.component, this._elementRef, outletInjector);
+        }).then(componentRef => {
+          this._componentRef = componentRef;
+          return this._childRouter.commit(instruction.child);
+        });
   }
 
+
   deactivate(): any {
-    return (isPresent(this._childRouter) ? this._childRouter.deactivate() :
-                                           PromiseWrapper.resolve(true))
-        .then((_) => this._componentRef.dispose());
+    var childRouter = (isPresent(this._childRouter) ? this._childRouter.deactivate() : PromiseWrapper.resolve(true))
+    return childRouter.then(_ => {
+      if (isPresent(this._componentRef)) {
+        this._componentRef.dispose();
+        this._componentRef = null;
+      }
+      return _;
+    });
   }
 
   canDeactivate(instruction: Instruction): any {

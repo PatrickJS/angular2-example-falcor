@@ -11,10 +11,9 @@ import {Router, Location} from 'angular2/router';
  *
  *
  * Consider the following route configuration:
-
  * ```
  * @RouteConfig({
- *   path: '/user', component: UserCmp, alias: 'user'
+ *   path: '/user', component: UserCmp, as: 'user'
  * });
  * class MyComp {}
  * ```
@@ -30,8 +29,9 @@ import {Router, Location} from 'angular2/router';
 @Directive({
   selector: '[router-link]',
   properties: ['route: routerLink', 'params: routerParams'],
-  hostListeners: {
-    '^click': 'onClick($event)'
+  lifecycle: [onAllChangesDone],
+  host: {
+    '(^click)': 'onClick($event)'
   }
 })
 export class RouterLink {
@@ -58,6 +58,7 @@ export class RouterLink {
   }
 
   onClick(evt) {
+    evt.preventDefault();
     let router = isPresent(this._router.parent) ? this._router.parent : this._router;
     router.navigate(this._navigationHref);
     return false;
@@ -65,13 +66,9 @@ export class RouterLink {
 
   onAllChangesDone(): void {
     if (isPresent(this._route) && isPresent(this._params)) {
-      try {
-        let router = isPresent(this._router.parent) ? this._router.parent : this._router;
-        this._navigationHref = router.generate(this._route, this._params);
-        this._visibleHref = this._location.normalizeAbsolutely(this._navigationHref);
-      } catch(e) {
-        debugger;
-      }
+      let router = isPresent(this._router.parent) ? this._router.parent : this._router;
+      this._navigationHref = router.generate(this._route, this._params);
+      this._visibleHref = this._location.normalizeAbsolutely(this._navigationHref);
       // Keeping the link on the element to support contextual menu `copy link`
       // and other in-browser affordances.
       if (isPresent(this._visibleHref)) {
