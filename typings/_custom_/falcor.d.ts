@@ -3,6 +3,8 @@ declare module "falcor" {
   export class Model {
     constructor(config: any)
     static ref: any;
+    static atom: any;
+    static error: any;
     bind(val: any, pathRoute: any): any;
     bindSync(...path: any[]): any;
     softBind(...path: any[]): any;
@@ -11,6 +13,7 @@ declare module "falcor" {
     set(jsongEnv: any, observer?:any): any;
     getValue(...path: any[]): any;
     setValue(...path: any[]): any;
+    batch(schedulerOrDelay?: any): any;
   }
   function get();
   function set();
