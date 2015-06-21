@@ -25,25 +25,25 @@ import {Rating} from './components/Rating';
   selector: 'movie-details'
 })
 @View({
-  directives: [ coreDirectives, appDirectives, Rating ],
+  directives: [ routerDirectives, coreDirectives, appDirectives, Rating ],
   template: `
   <div>
 
-    <button (click)="location.back()">Back</button>
+    <button router-link="movies">Back</button>
 
-    <h3>{{ model?.getValue('name') | async }}</h3>
+    <h3>{{ model?.getValue('title') | async }}</h3>
 
     <hr>
     <div class="side-details">
       <div>
-        <img [src]="(model?.getValue('img') | async) || '' ">
+        <img [src]="(model?.getValue('boxshot') | async) || '' ">
       </div>
       <b>Rating</b>: <rating [rate]="model?.getValue('rating') | async" (click)="onRating($event)")></rating>
     </div>
 
     <div class="movie-copy">
       <p>
-        {{ model?.getValue('copy') | async }}
+        {{ model?.getValue('description') | async }}
       </p>
       <ul>
         <li>
@@ -73,7 +73,8 @@ export class MovieDetails {
       // problably could be refactored into a client version of falcor-router
       this.path = this.getUrlPath(routeParams.get('path'));
       this.falcorModel.
-        bind(this.path, 'name').
+        batch(0).
+        bind(this.path, 'title').
         subscribe(model => this.model = model);
     }//routeParams
 
@@ -102,16 +103,14 @@ export class MovieDetails {
 @View({
   directives: [ routerDirectives, coreDirectives, appDirectives ],
   template: `
-  <div class="movie">
-    <a router-link="details" [router-params]="{
-      'id':   (model?.getValue('id') | async),
-      'path': stringify(model?.toJSON()?.value)
-    }">
-
-      <img [src]="(model?.getValue('img') | async) || '' " class="boxShotImg movie-box-image">
-
-    </a>
-  </div>
+  <a router-link="details" [router-params]="{
+    'id':   (model?.getValue('id') | async),
+    'path': stringify(model?.toJSON()?.value)
+  }">
+    <div class="movie">
+      <img [src]="(model?.getValue('boxshot') | async) || '' " class="boxShotImg movie-box-image">
+    </div>
+  </a>
   `
 })
 export class Movie {
@@ -142,7 +141,7 @@ export class Movie {
     <div class="scroll-row">
       <movie
         *ng-for="var movie of movieList; var $index = index"
-        [model]="model?.bind(['titles', $index], 'img') | async">
+        [model]="model?.batch(0)?.bind(['titles', $index], 'boxshot') | async">
       </movie>
     </div>
   </div>
@@ -173,14 +172,16 @@ export class GenreList {
     <genre-list
       *ng-for="var genre of genresList; var $index = index"
       size="8"
-      [model]="model?.bind(['genres', $index], 'name') | async">
+      [model]="model?.batch(0)?.bind(['genreLists', $index], 'name') | async">
     </genre-list>
   </div>
   `
 })
 export class Movies {
   genresList: Array<any>;
-  constructor(public model: FalcorModel) {
+  model: FalcorModel;
+  constructor(model: FalcorModel) {
+    this.model = model.batch(0);
 
     this.genresList = new Array(4);
 
@@ -229,7 +230,7 @@ export class Movies {
 })
 @RouteConfig([
   { path: '/', redirectTo: '/browse' },
-  { path: '/browse',          as: 'app',     component: Movies },
+  { path: '/browse',        as: 'app',     component: Movies },
   { path: '/movies',        as: 'movies',  component: Movies },
   { path: '/details/:path', as: 'details', component: MovieDetails },
 ])
