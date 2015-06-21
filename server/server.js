@@ -40,7 +40,18 @@ module.exports = function() {
 
 
   app.use(history());
-  app.use(express.static('public'));
+  app.use(express.static('public', {
+    maxAge: '2000',
+    setHeaders: setCustomCacheControl
+  }));
+
+  function setCustomCacheControl(res, path) {
+    console.log('path', path);
+    if (express.static.mime.lookup(path) === 'text/html') {
+      // Custom Cache-Control for HTML files
+      res.setHeader('Cache-Control', 'public, max-age=0')
+    }
+  }
 
   return app;
 }

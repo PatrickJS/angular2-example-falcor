@@ -6,15 +6,13 @@ import {XMLHttpSource} from 'falcor-browser';
 // import {initialCache} from './demoCache';
 import {initialCache} from './initialCache';
 
-var $ref = Model.ref;
+// class ModelRoot {
+//   expired:any = [];
+//   allowSync:number = 1;
+//   unsafeMode:boolean = false;
+// }
 
-class ModelRoot {
-  expired:any = [];
-  allowSync:number = 1;
-  unsafeMode:boolean = false;
-}
-
-export class AppSource extends XMLHttpSource {
+export class AppDataSource extends XMLHttpSource {
   constructor(@Inject('modelPath') path: string) {
     super(path, {
       headers: {},
@@ -24,11 +22,11 @@ export class AppSource extends XMLHttpSource {
 }
 
 export class FalcorModel extends Model {
-  constructor(source: AppSource, @Inject('initialCache') cache) {
+  constructor(source: AppDataSource, @Inject('initialCache') cache) {
     super({
       cache: cache,
-      source: source,
-      root: new ModelRoot() // needed for imagine that need getValueSync
+      source: source
+      // root: new ModelRoot() // needed for image src
     });
   }
 }
@@ -38,6 +36,6 @@ export class FalcorModel extends Model {
 export var falcorInjectibles = [
   bind('modelPath').toValue('/model.json'),
   bind('initialCache').toValue(initialCache),
-  AppSource,
+  AppDataSource,
   FalcorModel
 ];

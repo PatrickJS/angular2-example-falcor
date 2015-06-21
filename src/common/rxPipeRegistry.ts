@@ -133,7 +133,7 @@ class RxPipe extends Pipe {
       return this._latestReturnedValue;
     } else {
       this._latestReturnedValue = this._latestValue;
-      return WrappedValue.wrap(this._latestValue);
+      return WrappedValue.wrap(this._latestReturnedValue);
     }
   }
 
