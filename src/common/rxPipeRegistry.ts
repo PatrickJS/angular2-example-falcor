@@ -10,32 +10,6 @@ import {isBlank, isPresent} from 'angular2/src/facade/lang';
 import {PromiseWrapper} from 'angular2/src/facade/async';
 
 
-class NullPipeFactory2 extends PipeFactory {
-  constructor() { super(); }
-
-  supports(obj): boolean { return NullPipe2.supportsObj(obj); }
-
-  create(cdRef): Pipe { return new NullPipe2(); }
-}
-
-/**
- * @exportedAs angular2/pipes
- */
-class NullPipe2 extends Pipe {
-  constructor() {
-    super();
-  }
-
-  static supportsObj(obj): boolean { return isBlank(obj); }
-
-  supports(obj) { return NullPipe2.supportsObj(obj); }
-
-  transform(value) {
-    return value;
-  }
-}
-
-
 function isObservable(obs) {
   return obs && obs.subscribe && typeof obs.subscribe === 'function';
 }
@@ -72,7 +46,7 @@ function isObservable(obs) {
 //   }
 // }
 var id = 0;
-class RxPipe extends Pipe {
+class RxPipe {
   _ref: ChangeDetectorRef;
   _promise: Promise<any>;
 
@@ -89,7 +63,6 @@ class RxPipe extends Pipe {
   _count: any;
 
   constructor(ref: ChangeDetectorRef) {
-    super();
     this._ref = ref;
     this._latestValue = null;
     this._latestReturnedValue = null;
@@ -114,9 +87,9 @@ class RxPipe extends Pipe {
 
   transform(obs: any): any {
     this._count++;
-    if (this._id === 1) {
-      console.log('transform count', this._count)
-    }
+    // if (this._id === 1) {
+    //   console.log('transform count', this._count)
+    // }
     if (isBlank(this._subscription)) {
       this._subscribe(obs);
       return this._latestReturnedValue;
@@ -144,16 +117,16 @@ class RxPipe extends Pipe {
       observeOn(this._immediateScheduler).
       subscribe(
         value => {
-          if (this._id === 1) {
-            console.log('next', value)
-          }
+          // if (this._id === 1) {
+          //   console.log('next', value)
+          // }
           this._updateLatestValue(value)
         },
         e => { throw e; },
         _ => {
-          if (this._id === 1) {
-            console.log('complete')
-          }
+          // if (this._id === 1) {
+          //   console.log('complete')
+          // }
           this._dispose()
         }
       );
@@ -186,8 +159,7 @@ class RxPipe extends Pipe {
 
 
 
-class RxPipeFactory extends PipeFactory {
-  constructor() { super(); }
+class RxPipeFactory {
   supports(obs) { return isObservable(obs); }
   create(cdRef: ChangeDetectorRef): Pipe {
     return new RxPipe(cdRef);
