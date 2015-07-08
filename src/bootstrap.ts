@@ -4,12 +4,12 @@
 import {bootstrap} from 'angular2/angular2';
 
 // include any injectables
-// import {routerInjectables} from 'angular2/router';
-import {routerInjectables} from './patch_angular2/router';
+import {routerInjectables} from 'angular2/router';
+
 // App
 import {appServicesInjectables} from './app/services/services';
-// import {shadowDomInjectables} from 'common/shadowDomInjectables';
-// import {jitInjectables} from 'common/jitInjectables';
+import {nativeShadowDomInjectables} from './common/shadowDomInjectables';
+import {dynamicInjectables} from './common/changeDetectionInjectables';
 import {falcorInjectibles} from './common/FalcorModel';
 
 import {rxPipeRegistry} from './common/rxPipeRegistry';
@@ -25,9 +25,9 @@ bootstrap(App, [
 
   routerInjectables,
 
-  // shadowDomInjectables,
+  // nativeShadowDomInjectables,
 
-  // jitInjectables,
+  dynamicInjectables,
 
   appServicesInjectables,
 
