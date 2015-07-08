@@ -1,4 +1,4 @@
-import {bind, Inject} from 'angular2/di';
+import {bind, Inject, Injectable} from 'angular2/di';
 
 import {Model} from 'falcor';
 import {XMLHttpSource} from 'falcor-browser';
@@ -11,16 +11,17 @@ import {initialCache} from './initialCache';
 //   allowSync:number = 1;
 //   unsafeMode:boolean = false;
 // }
-
+@Injectable()
 export class AppDataSource extends XMLHttpSource {
   constructor(@Inject('modelPath') path: string) {
     super(path, {
       headers: {},
       timeout: 15000
-    })
+    });
   }
 }
 
+@Injectable()
 export class FalcorModel extends Model {
   constructor(source: AppDataSource, @Inject('initialCache') cache) {
     super({
