@@ -1,13 +1,15 @@
-import {Directive, Component, View, EventEmitter, onChange, coreDirectives} from 'angular2/angular2';
+import {Directive, Component, View} from 'angular2/angular2';
+import {EventEmitter, onChange, onDestroy, ON_PUSH, NgFor} from 'angular2/angular2';
 
 @Component({
   selector: 'rating',
-  properties: ['rate'],
-  events: ['click'],
-  lifecycle: [onChange],
+  lifecycle: [onChange, onDestroy],
+  // changeDetection: ON_PUSH,
+  properties: ['model: rate'],
+  events: ['update: rate']
 })
 @View({
-  directives: [ coreDirectives ],
+  directives: [ NgFor ],
   template: `
   <style>
     .rating {
@@ -35,26 +37,37 @@ import {Directive, Component, View, EventEmitter, onChange, coreDirectives} from
   `
 })
 export class Rating {
-  rate: any;
-  click: EventEmitter = new EventEmitter();
+  model: any;
+  update: EventEmitter = new EventEmitter();
   stars: string[];
+  _lastRating: number;
   constructor() {
     // Todo: use <content> with two insertion points
     // Todo: set stars declaratively
     this.stars = ['☆','☆','☆','☆','☆'];
+    this._lastRating = null;
   }
+
   onClick(event, index) {
     var count = Math.abs(index - this.stars.length);
-    this.setRate(index);
-    this.click.next({ event, count });
+    if (count !== this._lastRating) {
+      this._lastRating = count;
+      this.setRate(index);
+      this.update.next(count);
+    }
+    return false;
   }
   onChange() {
-    if (this.rate !== null) {
-      // console.log('rate', this.rate);
-      var rate = Math.abs(this.rate - this.stars.length)
+    if (this.model !== null && this.model !== this._lastRating) {
+      console.log('rate', this.model);
+      var rate = Math.abs(this.model - this.stars.length)
       this.setRate(rate);
     }
   }
+  onDestroy() {
+    this._lastRating = null;
+  }
+
   setRate(num) {
     // reversed due to css highlighting
 
