@@ -1,16 +1,15 @@
 /// <reference path="../../typings/tsd.d.ts" />
 
 // Angular 2
-import {Attribute, Directive, Component, View, onChange, onDestroy, onInit, ON_PUSH} from 'angular2/angular2';
+import {Attribute, Directive, Component, View} from 'angular2/angular2';
+import {onChange, onDestroy, onInit, ON_PUSH} from 'angular2/angular2';
 import {bind, Inject} from 'angular2/di';
-import {RouteConfig, Router, RouteParams, Location} from 'angular2/router';
-
-import * as Rx from 'rx';
+import {RouteConfig, Router, RouteParams} from 'angular2/router';
 
 // Import all of our custom app directives
 import {coreDirectives} from 'angular2/directives';
-// import {routerDirectives} from 'angular2/router';
-import {routerDirectives} from '../patch_angular2/router';
+import {routerDirectives} from 'angular2/router';
+
 // App
 import {appDirectives} from './directives/directives';
 
@@ -29,7 +28,7 @@ import {Rating} from './components/Rating';
   template: `
   <div>
 
-    <button router-link="movies">Back</button>
+    <button [router-link]="['/movies']">Back</button>
 
     <h3>{{ model?.getValue('title') | async }}</h3>
 
@@ -38,7 +37,9 @@ import {Rating} from './components/Rating';
       <div>
         <img [src]="(model?.getValue('boxshot') | async) || '' ">
       </div>
-      <b>Rating</b>: <rating [rate]="model?.getValue('rating') | async" (click)="onRating($event)")></rating>
+      <b>Rating</b>: <rating
+        [rate]="model?.getValue('rating') | async"
+        (rate)="onRating($event)"></rating>
     </div>
 
     <div class="movie-copy">
@@ -58,16 +59,12 @@ import {Rating} from './components/Rating';
   <div>
   `
 })
-@RouteConfig({
-  path: '/details/:id/:path', as: 'details', component: MovieDetails
-})
 export class MovieDetails {
   path: string;
   model: any;
   constructor(
     public routeParams: RouteParams,
-    public falcorModel: FalcorModel,
-    public location: Location) {
+    public falcorModel: FalcorModel) {
 
     if (routeParams.get('path')) {
       // problably could be refactored into a client version of falcor-router
@@ -83,13 +80,16 @@ export class MovieDetails {
     return JSON.parse(decodeURIComponent(path));
   }
 
-  onRating(event) {
-    console.log('onRating', event);
-    this.falcorModel.set({
-      path:  [].concat(this.path, 'rating'),
-      value: event.count
-    })
-    .then(res => console.log(res))
+  onRating(count) {
+    console.log('onRating', count);
+    this.model.setValue('rating', count)
+    .subscribe(res => console.log(res));
+    // this.falcorModel.set({
+    //   path:  [].concat(this.path, 'rating'),
+    //   value: count
+    // })
+    // .then(res => console.log(res));
+    return false;
   }
 }
 
@@ -103,10 +103,10 @@ export class MovieDetails {
 @View({
   directives: [ routerDirectives, coreDirectives, appDirectives ],
   template: `
-  <a router-link="details" [router-params]="{
+  <a [router-link]="['/details', {
     'id':   (model?.getValue('id') | async),
     'path': stringify(model?.toJSON()?.value)
-  }">
+  }]">
     <div class="movie">
       <img [src]="(model?.getValue('boxshot') | async) || '' " class="boxShotImg movie-box-image">
     </div>
@@ -204,7 +204,7 @@ export class Movies {
     main    { padding: 0.5em; }
   </style>
   <navbar>
-    <a router-link="app">
+    <a [router-link]="['/app']">
       Angular 2 + FalcorJS
     </a>
 
@@ -214,7 +214,7 @@ export class Movies {
       </li>
       |
       <li>
-        <a router-link="movies">Movies</a>
+        <a [router-link]="['/movies']">Movies</a>
       </li>
       |
       <li>
@@ -229,8 +229,7 @@ export class Movies {
   `
 })
 @RouteConfig([
-  { path: '/', redirectTo: '/browse' },
-  { path: '/browse',        as: 'app',     component: Movies },
+  { path: '/',              as: 'app',     component: Movies },
   { path: '/movies',        as: 'movies',  component: Movies },
   { path: '/details/:path', as: 'details', component: MovieDetails },
 ])
