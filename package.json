@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/gdi2290/angular2-example-falcor",
   "dependencies": {
-    "angular2": "2.0.0-alpha.27",
+    "angular2": "2.0.0-alpha.30",
     "body-parser": "^1.12.4",
     "connect-history-api-fallback": "^1.1.0",
     "express": "^4.12.4",
@@ -33,7 +33,7 @@
     "morgan": "^1.5.3",
     "raw-loader": "^0.5.1",
     "reflect-metadata": "^0.1.0",
-    "rtts_assert": "2.0.0-alpha.27",
+    "rtts_assert": "2.0.0-alpha.30",
     "rx": "^2.5.3",
     "zone.js": "^0.5.0"
   },
