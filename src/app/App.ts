@@ -71,7 +71,7 @@ export class MovieDetails {
       this.path = this.getUrlPath(routeParams.get('path'));
       this.falcorModel.
         batch(0).
-        bind(this.path, 'title').
+        deref(this.path, 'title').
         subscribe(model => this.model = model);
     }//routeParams
 
@@ -135,7 +135,7 @@ export class Movie {
     <div class="scroll-row">
       <movie
         *ng-for="var movie of movieList; var $index = index"
-        [model]="model?.batch(0)?.bind(['titles', $index], 'boxshot') | async">
+        [model]="model?.batch(0)?.deref(['titles', $index], 'boxshot') | async">
       </movie>
     </div>
   </div>
@@ -166,7 +166,7 @@ export class GenreList {
     <genre-list
       *ng-for="var genre of genresList; var $index = index"
       size="8"
-      [model]="model?.batch(0)?.bind(['genreLists', $index], 'name') | async">
+      [model]="model?.batch(0)?.deref(['genreLists', $index], 'name') | async">
     </genre-list>
   </div>
   `

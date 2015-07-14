@@ -19,6 +19,7 @@ import {rxPipeRegistry} from './common/rxPipeRegistry';
 // Top level component to bootstrap
 import {App} from './app/App';
 
+
 // bootstrap the Angular app with bindings
 bootstrap(App, [
   falcorInjectibles,
