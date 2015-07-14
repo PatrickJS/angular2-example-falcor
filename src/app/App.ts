@@ -84,11 +84,6 @@ export class MovieDetails {
     console.log('onRating', count);
     this.model.setValue('rating', count)
     .subscribe(res => console.log(res));
-    // this.falcorModel.set({
-    //   path:  [].concat(this.path, 'rating'),
-    //   value: count
-    // })
-    // .then(res => console.log(res));
     return false;
   }
 }
@@ -104,7 +99,6 @@ export class MovieDetails {
   directives: [ routerDirectives, coreDirectives, appDirectives ],
   template: `
   <a [router-link]="['/details', {
-    'id':   (model?.getValue('id') | async),
     'path': stringify(model?.toJSON()?.value)
   }]">
     <div class="movie">
